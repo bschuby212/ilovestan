@@ -5,13 +5,32 @@ export const site = {
   credit: "Independent, unofficial fan tribute. Not affiliated with Stan Wawrinka or the ATP.",
 };
 
+/** Primary section anchors — dropdown label tracks the active one on scroll */
 export const navLinks = [
-  { href: "#grand-slams", label: "Grand Slams" },
-  { href: "#backhand", label: "Backhand" },
-  { href: "#achievements", label: "Titles" },
-  { href: "#beyond", label: "Beyond" },
-  { href: "#timeline", label: "Timeline" },
-  { href: "#tribute", label: "Legacy" },
+  { href: "#top", label: "Home", id: "top" },
+  { href: "#titles-overview", label: "Titles", id: "titles-overview" },
+  { href: "#grand-slams", label: "Grand Slams", id: "grand-slams" },
+  { href: "#fail-better", label: "Fail Better", id: "fail-better" },
+  { href: "#backhand", label: "Backhand", id: "backhand" },
+  { href: "#testimonials", label: "Voices", id: "testimonials" },
+  { href: "#achievements", label: "Record", id: "achievements" },
+  { href: "#beyond", label: "Beyond", id: "beyond" },
+  { href: "#timeline", label: "Timeline", id: "timeline" },
+  { href: "#tribute", label: "Legacy", id: "tribute" },
+] as const;
+
+/** Official Stan socials — filler logo for now; real mark later */
+export const socialLinks = [
+  {
+    id: "instagram",
+    label: "Instagram",
+    href: "https://www.instagram.com/stanwawrinka/",
+  },
+  {
+    id: "x",
+    label: "X",
+    href: "https://x.com/stanwawrinka",
+  },
 ] as const;
 
 export const grandSlams = [
