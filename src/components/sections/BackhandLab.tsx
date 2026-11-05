@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
+import { AnimatedNumber } from "@/components/AnimatedNumber";
 import {
   backhandCallouts,
   backhandPlayers,
@@ -16,28 +17,41 @@ const maxSpin = Math.max(...backhandPlayers.map((p) => p.spinRpm));
 
 export function BackhandLab() {
   const rootRef = useRef<HTMLElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const { gsap } = getGsap();
     const root = rootRef.current;
+    const stats = statsRef.current;
     if (!root) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
       gsap.from(root.querySelectorAll(".bh-reveal"), {
-        y: 36,
+        y: 28,
         opacity: 0,
-        duration: 0.85,
-        stagger: 0.08,
+        duration: 0.75,
+        stagger: 0.06,
         ease: "power3.out",
-        scrollTrigger: { trigger: root, start: "top 70%" },
+        scrollTrigger: { trigger: root, start: "top 72%" },
       });
 
-      gsap.from(root.querySelectorAll(".bh-bar-fill"), {
+      if (stats) {
+        gsap.from(stats.querySelectorAll(".bh-stat-bar"), {
+          scaleX: 0,
+          transformOrigin: "left center",
+          duration: 1.15,
+          stagger: 0.12,
+          ease: "power2.out",
+          scrollTrigger: { trigger: stats, start: "top 78%" },
+        });
+      }
+
+      gsap.from(root.querySelectorAll(".bh-compare-bar"), {
         scaleX: 0,
         transformOrigin: "left center",
         duration: 1.1,
-        stagger: 0.12,
+        stagger: 0.08,
         ease: "power2.out",
         scrollTrigger: {
           trigger: root.querySelector(".bh-compare"),
@@ -101,23 +115,31 @@ export function BackhandLab() {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between bg-paper-white p-8 md:p-10 lg:p-14">
+        <div
+          ref={statsRef}
+          className="flex flex-col justify-between bg-paper-white p-8 md:p-10 lg:p-14"
+        >
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6">
-            {backhandCallouts.map((stat) => (
-              <div key={stat.label} className="bh-reveal border-t border-concrete-gray pt-5">
+            {backhandCallouts.map((stat, i) => (
+              <div key={stat.label} className="border-t border-concrete-gray pt-5">
                 <p className="text-[12px] font-medium tracking-[0.16em] text-steel uppercase">
                   {stat.label}
                 </p>
                 <p className="mt-3 flex items-baseline gap-2">
-                  <span className="display-type text-[clamp(40px,5vw,56px)] text-obsidian">
-                    {stat.value}
-                  </span>
+                  <AnimatedNumber
+                    value={stat.value}
+                    format={stat.format}
+                    delay={i * 0.12}
+                    duration={1.4}
+                    start="top 82%"
+                    className="display-type text-[clamp(40px,5vw,56px)] text-obsidian tabular-nums"
+                  />
                   <span className="text-[14px] text-steel">{stat.unit}</span>
                 </p>
                 <p className="mt-3 text-[14px] leading-[1.6] text-steel">{stat.detail}</p>
                 <div className="mt-4 h-px w-full bg-concrete-gray">
                   <div
-                    className="bh-bar-fill h-px bg-obsidian"
+                    className="bh-stat-bar h-px origin-left bg-obsidian"
                     style={{ width: `${stat.bar}%` }}
                   />
                 </div>
@@ -173,12 +195,17 @@ export function BackhandLab() {
                     Avg speed
                   </span>
                   <span className="text-[16px] font-medium tabular-nums">
-                    {player.avgSpeedMph} mph
+                    <AnimatedNumber
+                      value={player.avgSpeedMph}
+                      duration={1.2}
+                      start="top 85%"
+                    />{" "}
+                    mph
                   </span>
                 </div>
                 <div className="mt-2 h-1 w-full bg-concrete-gray">
                   <div
-                    className="bh-bar-fill h-1 bg-obsidian"
+                    className="bh-compare-bar h-1 origin-left bg-obsidian"
                     style={{
                       width: `${(player.avgSpeedMph / maxSpeed) * 100}%`,
                     }}
@@ -192,12 +219,18 @@ export function BackhandLab() {
                     Spin
                   </span>
                   <span className="text-[16px] font-medium tabular-nums">
-                    {player.spinRpm.toLocaleString()} RPM
+                    <AnimatedNumber
+                      value={player.spinRpm}
+                      format="comma"
+                      duration={1.35}
+                      start="top 85%"
+                    />{" "}
+                    RPM
                   </span>
                 </div>
                 <div className="mt-2 h-1 w-full bg-concrete-gray">
                   <div
-                    className="bh-bar-fill h-1 bg-obsidian"
+                    className="bh-compare-bar h-1 origin-left bg-obsidian"
                     style={{
                       width: `${(player.spinRpm / maxSpin) * 100}%`,
                     }}

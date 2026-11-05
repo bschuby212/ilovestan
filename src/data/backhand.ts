@@ -62,21 +62,24 @@ export const backhandPlayers = [
 export const backhandCallouts = [
   {
     label: "Avg. BH speed",
-    value: "75",
+    value: 75,
+    format: "plain" as const,
     unit: "mph",
     detail: "Stan — top of AO Hawk-Eye men’s averages (2014–2016)",
     bar: 100,
   },
   {
     label: "BH spin",
-    value: "2,500",
+    value: 2500,
+    format: "comma" as const,
     unit: "RPM",
     detail: "Nearly identical to his forehand RPM — rare balance",
     bar: 86,
   },
   {
     label: "RG ’15 winners",
-    value: "60",
+    value: 60,
+    format: "plain" as const,
     unit: "total",
     detail: "Final vs Djokovic — backhand drove the demolition",
     bar: 92,

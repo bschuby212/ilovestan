@@ -4,23 +4,20 @@ import { useEffect, useRef, useState } from "react";
 import { titlesOverview } from "@/data/titlesOverview";
 import { getGsap } from "@/lib/gsap";
 
-const TYPE_MS = 42;
-const DELETE_MS = 28;
-const HOLD_MS = 900;
-const GAP_MS = 280;
+const HOLD_MS = 2400;
+const FADE_MS = 420;
 
 /**
- * Full-viewport typewriter: one line types each title in,
- * holds, deletes, then the next — classic writer cascade.
+ * Full-viewport chapters: Grand Slams listed vertically with years,
+ * then advance to Masters / Olympics / Davis / Peak — fluid fade, no counters.
  */
 export function TitlesOverview() {
   const sectionRef = useRef<HTMLElement>(null);
   const [index, setIndex] = useState(0);
-  const [display, setDisplay] = useState("");
+  const [visible, setVisible] = useState(true);
   const [active, setActive] = useState(false);
-  const [typing, setTyping] = useState(false);
 
-  const full = titlesOverview.titles[index] ?? titlesOverview.titles[0];
+  const chapter = titlesOverview.chapters[index] ?? titlesOverview.chapters[0];
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -39,60 +36,32 @@ export function TitlesOverview() {
       onLeaveBack: () => setActive(false),
     });
 
-    if (reduce) {
-      setActive(true);
-      setDisplay(full);
-    }
+    if (reduce) setActive(true);
 
     return () => st.kill();
-  }, [full]);
+  }, []);
 
   useEffect(() => {
     if (!active) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setDisplay(full);
-      return;
-    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let cancelled = false;
-    setTyping(true);
 
-    const sleep = (ms: number) =>
-      new Promise<void>((resolve) => {
-        const t = window.setTimeout(resolve, ms);
-        if (cancelled) window.clearTimeout(t);
-      });
-
-    const run = async () => {
-      setDisplay("");
-      // type in
-      for (let i = 1; i <= full.length; i++) {
-        if (cancelled) return;
-        setDisplay(full.slice(0, i));
-        await sleep(TYPE_MS);
-      }
+    const tick = async () => {
+      await new Promise((r) => setTimeout(r, HOLD_MS));
       if (cancelled) return;
-      setTyping(false);
-      await sleep(HOLD_MS);
+      setVisible(false);
+      await new Promise((r) => setTimeout(r, FADE_MS));
       if (cancelled) return;
-      setTyping(true);
-      // delete out
-      for (let i = full.length - 1; i >= 0; i--) {
-        if (cancelled) return;
-        setDisplay(full.slice(0, i));
-        await sleep(DELETE_MS);
-      }
-      if (cancelled) return;
-      await sleep(GAP_MS);
-      if (cancelled) return;
-      setIndex((i) => (i + 1) % titlesOverview.titles.length);
+      setIndex((i) => (i + 1) % titlesOverview.chapters.length);
+      setVisible(true);
     };
 
-    void run();
+    void tick();
     return () => {
       cancelled = true;
     };
-  }, [active, index, full]);
+  }, [active, index]);
 
   return (
     <section
@@ -103,25 +72,41 @@ export function TitlesOverview() {
       aria-live="polite"
     >
       <div className="mx-auto w-full max-w-[1440px] px-6 md:px-10">
-        <p className="mb-8 text-[12px] font-medium tracking-[0.22em] text-faint-gray uppercase md:mb-10">
-          {titlesOverview.eyebrow}
+        <p className="mb-10 text-[12px] font-medium tracking-[0.22em] text-faint-gray uppercase md:mb-12">
+          {titlesOverview.sectionEyebrow}
         </p>
 
-        <p className="display-type min-h-[1.15em] text-[clamp(40px,7.5vw,76px)] leading-[1.0]">
-          <span>{display}</span>
-          <span
-            className={`ml-[2px] inline-block w-[0.08em] bg-paper-white align-[-0.05em] ${
-              typing ? "animate-pulse" : "opacity-100"
-            }`}
-            style={{ height: "0.85em" }}
-            aria-hidden
-          />
-        </p>
+        <div
+          className="transition-opacity duration-[420ms] ease-out"
+          style={{ opacity: visible ? 1 : 0 }}
+        >
+          <p className="mb-8 text-[12px] font-medium tracking-[0.18em] text-steel uppercase md:mb-10">
+            {chapter.eyebrow}
+          </p>
 
-        <ul className="mt-14 flex gap-2" aria-hidden>
-          {titlesOverview.titles.map((t, i) => (
+          <ul className="flex flex-col gap-5 md:gap-7">
+            {chapter.lines.map((line) => (
+              <li
+                key={`${chapter.id}-${line.primary}`}
+                className="flex flex-wrap items-baseline gap-x-5 gap-y-1"
+              >
+                <span className="display-type text-[clamp(36px,6.5vw,68px)] leading-[1.05]">
+                  {line.primary}
+                </span>
+                {line.secondary ? (
+                  <span className="text-[16px] tracking-[0.08em] text-faint-gray md:text-[18px]">
+                    {line.secondary}
+                  </span>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <ul className="mt-16 flex gap-2 md:mt-20" aria-hidden>
+          {titlesOverview.chapters.map((c, i) => (
             <li
-              key={t}
+              key={c.id}
               className={`h-1 w-7 transition-colors duration-300 ${
                 i === index ? "bg-paper-white" : "bg-white/20"
               }`}

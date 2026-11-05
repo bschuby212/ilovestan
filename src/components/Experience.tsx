@@ -7,6 +7,7 @@ import { TitlesOverview } from "@/components/sections/TitlesOverview";
 import { GrandSlam } from "@/components/sections/GrandSlam";
 import { FailBetter } from "@/components/sections/FailBetter";
 import { BackhandLab } from "@/components/sections/BackhandLab";
+import { Testimonials } from "@/components/sections/Testimonials";
 import { Achievements } from "@/components/sections/Achievements";
 import { BeyondCourt } from "@/components/sections/BeyondCourt";
 import { Timeline } from "@/components/sections/Timeline";
@@ -23,6 +24,7 @@ export function Experience() {
         <GrandSlam />
         <FailBetter />
         <BackhandLab />
+        <Testimonials />
         <Achievements />
         <BeyondCourt />
         <Timeline />
