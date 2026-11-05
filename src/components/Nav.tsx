@@ -4,30 +4,37 @@ import { navLinks } from "@/data/content";
 
 export function Nav() {
   return (
-    <header className="absolute inset-x-0 top-0 z-50 text-paper-white">
-      {/* Utility tier — Nike MD: 12px Obsidian-on-white; here inverted for dark hero */}
-      <div className="border-b border-white/10">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-end gap-5 px-6 py-2 md:px-10">
-          <a href="#beyond" className="text-[12px] font-medium tracking-[0.02em] text-paper-white/80 hover:opacity-70">
+    <header className="pointer-events-none absolute inset-x-0 top-0 z-50 text-paper-white">
+      <div className="pointer-events-auto border-b border-white/10">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-end gap-6 px-6 py-2 md:px-10">
+          <a
+            href="#beyond"
+            className="text-[12px] font-medium text-paper-white/75 transition-opacity hover:opacity-70"
+          >
             Find help
           </a>
-          <a href="#tribute" className="text-[12px] font-medium tracking-[0.02em] text-paper-white/80 hover:opacity-70">
+          <a
+            href="#tribute"
+            className="text-[12px] font-medium text-paper-white/75 transition-opacity hover:opacity-70"
+          >
             About this tribute
           </a>
         </div>
       </div>
 
-      {/* Main tier */}
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-6 py-3 md:px-10">
+      <div className="pointer-events-auto mx-auto flex max-w-[1440px] items-center gap-6 px-6 py-3 md:px-10">
         <a
           href="#top"
-          className="text-[16px] font-medium tracking-[0.14em] uppercase"
+          className="shrink-0 text-[16px] font-medium tracking-[0.16em] uppercase"
           aria-label="Stan Wawrinka — home"
         >
           Stan
         </a>
 
-        <nav className="hidden items-center gap-6 md:flex" aria-label="Primary">
+        <nav
+          className="hidden flex-1 items-center justify-center gap-6 md:flex"
+          aria-label="Primary"
+        >
           {navLinks.map((link) => (
             <a
               key={link.href}
@@ -39,8 +46,8 @@ export function Nav() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <label className="relative hidden sm:block">
+        <div className="ml-auto flex items-center gap-3 md:ml-0">
+          <label className="relative hidden lg:block">
             <span className="sr-only">Search</span>
             <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-steel">
               <SearchIcon />
@@ -48,7 +55,7 @@ export function Nav() {
             <input
               type="search"
               placeholder="Search"
-              className="w-[160px] rounded-[24px] border-0 bg-soft-mist py-[6px] pr-3 pl-9 text-[16px] text-obsidian placeholder:text-steel outline-none md:w-[200px]"
+              className="w-[180px] rounded-[24px] border-0 bg-soft-mist py-[6px] pr-3 pl-9 text-[16px] text-obsidian placeholder:text-steel outline-none"
             />
           </label>
           <a href="#achievements" className="pill pill--light text-[14px] md:text-[16px]">

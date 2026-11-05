@@ -6,29 +6,31 @@ import { stanMedia } from "@/data/media";
 import { getGsap } from "@/lib/gsap";
 
 /**
- * Framer-style multi-speed parallax (prlx.learnframer.site pattern)
- * using authentic Stan photography. Drop licensed match film at
- * /public/video/stan-hero.mp4 to replace the still stack.
+ * Framer-style sticky parallax (prlx.learnframer.site):
+ * full-bleed authentic Stan still + independent text scroll speed.
+ * When licensed match film is available, place it at /video/stan-hero.mp4.
  */
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
-  const backRef = useRef<HTMLDivElement>(null);
-  const midRef = useRef<HTMLDivElement>(null);
-  const videoSlotRef = useRef<HTMLVideoElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const video = videoSlotRef.current;
+    const video = videoRef.current;
     if (!video) return;
-    // Only play if a real authorized file is present (source resolves)
-    const source = video.querySelector("source");
-    if (!source?.getAttribute("src")) return;
 
-    fetch(source.getAttribute("src")!, { method: "HEAD" })
+    const src = "/video/stan-hero.mp4";
+    fetch(src, { method: "HEAD" })
       .then((res) => {
         if (!res.ok) return;
+        const source = document.createElement("source");
+        source.src = src;
+        source.type = "video/mp4";
+        video.appendChild(source);
+        video.load();
         video.dataset.ready = "true";
         video.muted = true;
         void video.play().catch(() => undefined);
@@ -40,11 +42,10 @@ export function Hero() {
     const { gsap } = getGsap();
     const section = sectionRef.current;
     const pin = pinRef.current;
-    const back = backRef.current;
-    const mid = midRef.current;
+    const media = mediaRef.current;
     const copy = copyRef.current;
     const scrollHint = scrollRef.current;
-    if (!section || !pin || !back || !mid || !copy || !scrollHint) return;
+    if (!section || !pin || !media || !copy || !scrollHint) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const words = copy.querySelectorAll(".word");
@@ -53,16 +54,18 @@ export function Hero() {
       gsap.set(words, { yPercent: 110, opacity: 0 });
       gsap.set(copy.querySelectorAll(".hero-fade"), { opacity: 0, y: 16 });
       gsap.set(scrollHint, { opacity: 0 });
-      gsap.set(back, { scale: 1.28, yPercent: -8 });
-      gsap.set(mid, { scale: 1.18, yPercent: 6 });
+      gsap.set(media, { scale: 1.22, yPercent: -6 });
 
       const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
       intro
-        .to(back, { scale: 1.14, yPercent: 0, duration: 2.5, ease: "power2.out" }, 0)
-        .to(mid, { scale: 1.08, yPercent: 0, duration: 2.5, ease: "power2.out" }, 0)
-        .to(words, { yPercent: 0, opacity: 1, duration: 1.05, stagger: 0.1 }, 0.4)
-        .to(copy.querySelectorAll(".hero-fade"), { opacity: 1, y: 0, duration: 0.75, stagger: 0.08 }, 1.0)
-        .to(scrollHint, { opacity: 1, duration: 0.5 }, 1.4);
+        .to(media, { scale: 1.12, yPercent: 0, duration: 2.4, ease: "power2.out" }, 0)
+        .to(words, { yPercent: 0, opacity: 1, duration: 1.05, stagger: 0.1 }, 0.35)
+        .to(
+          copy.querySelectorAll(".hero-fade"),
+          { opacity: 1, y: 0, duration: 0.7, stagger: 0.08 },
+          0.95,
+        )
+        .to(scrollHint, { opacity: 1, duration: 0.5 }, 1.35);
 
       if (reduce) return;
 
@@ -78,14 +81,12 @@ export function Hero() {
         },
       });
 
-      // Slowest layer — primary Stan backhand
-      tl.to(back, { yPercent: 24, scale: 1.06, ease: "none", duration: 1 }, 0);
-      // Mid depth — second Stan still (faster)
-      tl.to(mid, { yPercent: -18, scale: 1.16, ease: "none", duration: 1 }, 0);
-      // Copy — Framer ~0.4 scroll speed float
-      tl.to(copy, { yPercent: -62, ease: "none", duration: 1 }, 0);
+      // Background media — slow scroll speed
+      tl.to(media, { yPercent: 20, scale: 1.04, ease: "none", duration: 1 }, 0);
+      // Typography — Framer ~0.4 speed float
+      tl.to(copy, { yPercent: -58, ease: "none", duration: 1 }, 0);
       tl.to(scrollHint, { opacity: 0, y: -20, ease: "none", duration: 0.2 }, 0);
-      tl.to(copy, { opacity: 0.12, ease: "none", duration: 0.3 }, 0.7);
+      tl.to(copy, { opacity: 0.15, ease: "none", duration: 0.3 }, 0.7);
     }, section);
 
     return () => ctx.revert();
@@ -99,55 +100,33 @@ export function Hero() {
       aria-label="Cinematic introduction"
     >
       <div ref={pinRef} className="relative h-[100svh] min-h-[640px] overflow-hidden">
-        {/* Layer 0 — authentic Stan backhand (slow) */}
-        <div ref={backRef} className="absolute inset-[-14%] will-change-transform">
+        <div ref={mediaRef} className="absolute inset-[-14%] will-change-transform">
           <Image
             src={stanMedia.hero.src}
             alt={stanMedia.hero.alt}
             fill
             priority
             sizes="100vw"
-            className="object-cover object-[center_30%]"
+            className="object-cover object-[center_22%]"
+          />
+          <video
+            ref={videoRef}
+            className="absolute inset-0 h-full w-full object-cover opacity-0 data-[ready=true]:opacity-100"
+            muted
+            loop
+            playsInline
+            preload="none"
+            aria-label="Authorized Stan Wawrinka match footage"
           />
           <div
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, rgba(17,17,17,0.45) 0%, rgba(17,17,17,0.2) 40%, rgba(17,17,17,0.72) 100%)",
+                "linear-gradient(180deg, rgba(17,17,17,0.5) 0%, rgba(17,17,17,0.18) 38%, rgba(17,17,17,0.78) 100%)",
             }}
           />
         </div>
 
-        {/* Layer 1 — depth still (masked, faster parallax) */}
-        <div
-          ref={midRef}
-          className="pointer-events-none absolute inset-y-[12%] right-[-8%] left-[42%] overflow-hidden opacity-55 will-change-transform mix-blend-luminosity max-md:hidden"
-          aria-hidden
-        >
-          <Image
-            src={stanMedia.heroDepth.src}
-            alt=""
-            fill
-            sizes="55vw"
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-obsidian/30" />
-        </div>
-
-        {/* Optional authorized video slot — only visible when file exists */}
-        <video
-          ref={videoSlotRef}
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0 data-[ready=true]:opacity-100"
-          muted
-          loop
-          playsInline
-          preload="none"
-          aria-hidden
-        >
-          <source src="/video/stan-hero.mp4" type="video/mp4" />
-        </video>
-
-        {/* Typography layer */}
         <div
           ref={copyRef}
           className="relative z-10 flex h-full flex-col justify-end px-6 pb-24 will-change-transform md:px-10 md:pb-28"
@@ -172,8 +151,7 @@ export function Hero() {
             </a>
           </div>
           <p className="hero-fade mt-6 max-w-md text-[12px] leading-[1.5] text-faint-gray">
-            {stanMedia.hero.credit}. Authorized match video pending —
-            drop it in as <span className="text-paper-white/75">/video/stan-hero.mp4</span>.
+            {stanMedia.hero.credit}
           </p>
         </div>
 
