@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getGsap } from "@/lib/gsap";
 
-const HIGHLIGHTS_SRC = "/video/stan-highlights.mp4";
-const HIGHLIGHTS_POSTER = "/video/stan-highlights-poster.jpg";
+/** Prefer live hitting clip you supply; fall back to stills montage. */
+const LIVE_SRC = "/video/stan-live.mp4";
+const LIVE_POSTER = "/video/stan-live-poster.jpg";
+const FALLBACK_SRC = "/video/stan-highlights.mp4";
+const FALLBACK_POSTER = "/video/stan-highlights-poster.jpg";
 
 /**
- * Full-bleed career-highlights video background + Framer-style parallax.
- * Reel is built from authentic Stan Wikimedia stills (Ken Burns montage)
- * until licensed match film replaces /video/stan-highlights.mp4.
+ * Full-bleed hero video + Framer-style parallax.
+ * Drop live match hitting at public/video/stan-live.mp4 (see MEDIA.md).
  */
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -18,6 +20,22 @@ export function Hero() {
   const copyRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [src, setSrc] = useState(FALLBACK_SRC);
+  const [poster, setPoster] = useState(FALLBACK_POSTER);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(LIVE_SRC, { method: "HEAD" })
+      .then((res) => {
+        if (cancelled || !res.ok) return;
+        setSrc(LIVE_SRC);
+        setPoster(LIVE_POSTER);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -29,6 +47,7 @@ export function Hero() {
       void video.play().catch(() => undefined);
     };
 
+    video.load();
     tryPlay();
     video.addEventListener("loadeddata", tryPlay);
     video.addEventListener("canplay", tryPlay);
@@ -44,7 +63,7 @@ export function Hero() {
       video.removeEventListener("canplay", tryPlay);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, []);
+  }, [src]);
 
   useEffect(() => {
     const { gsap } = getGsap();
@@ -112,16 +131,17 @@ export function Hero() {
         <div ref={mediaRef} className="absolute inset-[-14%] will-change-transform">
           <video
             ref={videoRef}
+            key={src}
             className="absolute inset-0 h-full w-full object-cover"
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
-            poster={HIGHLIGHTS_POSTER}
-            aria-label="Stan Wawrinka career highlights reel"
+            poster={poster}
+            aria-label="Stan Wawrinka live hitting highlights"
           >
-            <source src={HIGHLIGHTS_SRC} type="video/mp4" />
+            <source src={src} type="video/mp4" />
           </video>
           <div
             className="absolute inset-0"
@@ -151,7 +171,7 @@ export function Hero() {
             Three majors. One backhand. A career that refused to settle for almost.
           </p>
           <div className="hero-fade mt-8">
-            <a href="#grand-slams" className="pill pill--light">
+            <a href="#titles-overview" className="pill pill--light">
               Enter the journey
             </a>
           </div>
