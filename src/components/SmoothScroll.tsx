@@ -11,9 +11,11 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     const { gsap, ScrollTrigger } = getGsap();
     const lenis = new Lenis({
-      duration: 1.1,
+      // Snappier — PRD: don't fake fluidity with heavier smoothing
+      duration: 0.95,
       smoothWheel: true,
-      touchMultiplier: 1.4,
+      touchMultiplier: 1.25,
+      wheelMultiplier: 1.05,
     });
 
     lenis.on("scroll", ScrollTrigger.update);

@@ -1,38 +1,36 @@
-# Media — live hitting video
+# Media — hero video
 
-## Hero expects live match hitting
+## Hero source (current)
 
-Drop your edited clip here:
+Hero uses a muted YouTube embed of Stan highlights:
+
+- Video: https://youtu.be/1FD_QiQxrE4
+- Embed: `youtube-nocookie.com` with controls off, modest branding, loop, muted autoplay
+- UI hiding: oversized iframe cropped inside the hero + edge gradients + `pointer-events-none`
+
+YouTube may still flash a title/logo on load — their player always reserves some chrome. If that keeps showing through, **screen-record the clip** and drop a local file instead (cleaner, no player UI):
 
 ```text
 public/video/stan-live.mp4
 public/video/stan-live-poster.jpg   # optional still frame
 ```
 
-The hero prefers **`stan-live.mp4`**. If it’s missing, it falls back to the stills montage (`stan-highlights.mp4`) so local dev still works.
+Then point `Hero.tsx` back at the local `<video>` (or ask the agent to swap).
 
-## How to make the clip (your side)
-
-I can’t download or re-host ATP / beIN / YouTube match film from here (copyright). You can build a short highlights cut yourself:
-
-1. Open an official **ATP Tour** (or rights-holder) YouTube upload of Stan — ideally backhand winners / rally clips.
-2. Note start/end times for continuous live hitting (not photo slideshows).
-3. Download only if **you** have the right to use that upload (channel permission / fair editorial use / your own capture). Prefer official embeds or licensed assets when publishing.
-4. Crop with ffmpeg, **keep end cards / copyright bumpers** if the source requires credit:
+## Optional local clip (preferred long-term)
 
 ```bash
-# Example: cut 0:42–1:18, keep source credit slate if it appears at the end of your range
-ffmpeg -ss 00:00:42 -to 00:01:18 -i source.mp4 \
+# After you screen-record / export your cut:
+ffmpeg -i your-recording.mp4 \
   -c:v libx264 -an -movflags +faststart \
   public/video/stan-live.mp4
 
-# Poster frame
 ffmpeg -ss 00:00:02 -i public/video/stan-live.mp4 -frames:v 1 \
   public/video/stan-live-poster.jpg
 ```
 
-5. Put credit text in the site footer / hero caption (channel name, year, “clip used with permission / for unofficial tribute”).
+Keep source credit in the footer if the rights-holder requires it.
 
 ## Ball scroll sequence
 
-The soap-can-style scroll section uses a **generated tennis-ball frame scrub** (not match film). It’s a separate motion piece: scroll drives the sequence, then the ball bounces up. Live hitting stays in the hero video layer.
+The soap-can-style scroll section uses a **generated tennis-ball frame scrub** (not match film). Live hitting stays in the hero layer.

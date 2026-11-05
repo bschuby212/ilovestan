@@ -53,9 +53,10 @@ export function GrandSlam() {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "+=320%",
+          // Tighter pin — three surfaces without a marathon scrub
+          end: "+=175%",
           pin: pin,
-          scrub: 0.65,
+          scrub: 0.4,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
@@ -259,7 +260,7 @@ export function GrandSlam() {
                 key={slam.id}
                 className="slam-card absolute inset-x-6 bottom-10 flex max-w-4xl flex-col gap-6 md:inset-x-10 md:bottom-14 md:flex-row md:items-end"
               >
-                <div className="relative hidden h-48 w-36 shrink-0 overflow-hidden md:block md:h-56 md:w-44">
+                <div className="media-mask relative hidden h-48 w-36 shrink-0 overflow-hidden md:block md:h-56 md:w-44">
                   <Image
                     src={photo.src}
                     alt={photo.alt}

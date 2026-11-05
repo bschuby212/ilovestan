@@ -49,7 +49,7 @@ export function FailBetter() {
       aria-label="Fail better tattoo"
     >
       <div className="grid min-h-[85svh] grid-cols-1 lg:grid-cols-2">
-        <div className="relative min-h-[50vh] lg:min-h-full">
+        <div className="media-mask relative min-h-[50vh] lg:min-h-full">
           <Image
             src={stanMedia.portrait.src}
             alt={stanMedia.portrait.alt}

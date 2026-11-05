@@ -68,7 +68,7 @@ export function Achievements() {
         {featuredVisuals.map((item) => (
           <article
             key={`${item.title}-${item.year}`}
-            className="cat-tile relative min-h-[50vh] overflow-hidden"
+            className="cat-tile media-mask group relative min-h-[50vh] overflow-hidden"
           >
             <Image
               src={item.image.src}
@@ -78,7 +78,7 @@ export function Achievements() {
               className="object-cover"
             />
             <div
-              className="absolute inset-0"
+              className="absolute inset-0 transition-opacity duration-500 group-hover:opacity-90"
               style={{
                 background:
                   "linear-gradient(180deg, rgba(17,17,17,0.05) 0%, rgba(17,17,17,0.55) 100%)",
@@ -86,14 +86,17 @@ export function Achievements() {
             />
             <div className="absolute right-0 bottom-0 left-0 p-8 text-paper-white md:p-10">
               <p className="text-[16px]">{item.kind}</p>
-              <h3 className="mt-1 text-[20px] leading-[1.5] font-medium md:text-[24px]">
+              <h3 className="mt-1 text-[20px] leading-[1.5] font-medium transition-transform duration-500 ease-out group-hover:translate-x-1 md:text-[24px]">
                 {item.title}
                 <span className="text-paper-white/70"> · {item.year}</span>
               </h3>
               <p className="mt-2 max-w-sm text-[16px] text-paper-white/80">{item.detail}</p>
               <div className="mt-5 flex flex-wrap gap-2">
                 <a href={item.href} className="pill pill--light">
-                  View moment
+                  <span className="link-swap">
+                    <span>View moment</span>
+                    <span aria-hidden>Enter</span>
+                  </span>
                 </a>
                 <a href="#timeline" className="pill pill--light">
                   On the timeline
@@ -117,7 +120,7 @@ export function Achievements() {
               key={card.label}
               className="relative w-[33.333vw] min-w-[240px] shrink-0 bg-paper-white"
             >
-              <div className="relative aspect-[4/5] w-full overflow-hidden bg-soft-mist">
+              <div className="media-mask relative aspect-[4/5] w-full overflow-hidden bg-soft-mist">
                 <Image
                   src={card.image.src}
                   alt={card.image.alt}
@@ -142,10 +145,12 @@ export function Achievements() {
           {archive.map((item) => (
             <li
               key={`${item.title}-${item.year}`}
-              className="flex flex-col gap-2 py-5 md:flex-row md:items-baseline md:justify-between md:gap-8"
+              className="group flex flex-col gap-2 py-5 transition-colors md:flex-row md:items-baseline md:justify-between md:gap-8"
             >
               <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                <span className="text-[16px] font-medium">{item.title}</span>
+                <span className="text-[16px] font-medium transition-transform duration-500 ease-out group-hover:translate-x-1">
+                  {item.title}
+                </span>
                 <span className="text-[14px] text-steel">{item.kind}</span>
               </div>
               <div className="flex items-baseline gap-6 text-[16px]">

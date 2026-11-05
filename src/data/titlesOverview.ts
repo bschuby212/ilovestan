@@ -1,42 +1,56 @@
-/** Full-viewport title chapters — vertical lists, fluid cycle */
+/**
+ * Career metrics for the scroll-driven numbers parade after the hero.
+ * Verified against ATP Tour bio / tribute sources (singles titles, ranking, Olympics).
+ */
 
-export type TitleChapter = {
+export type CareerMetric = {
   id: string;
-  eyebrow: string;
-  lines: { primary: string; secondary?: string }[];
+  /** Large display — can be "3", "16", "No. 3", "2014" */
+  value: string;
+  label: string;
+  detail: string;
+  /** Optional years / secondary type line */
+  aside?: string;
 };
 
 export const titlesOverview = {
   sectionEyebrow: "By the numbers",
-  chapters: [
+  /** Scroll-scrubbed beats — not a chart, not a timer carousel */
+  metrics: [
     {
       id: "slams",
-      eyebrow: "Grand Slams",
-      lines: [
-        { primary: "Australian Open", secondary: "2014" },
-        { primary: "Roland-Garros", secondary: "2015" },
-        { primary: "US Open", secondary: "2016" },
-      ],
+      value: "3",
+      label: "Grand Slam singles titles",
+      detail: "Three majors — each against the world No. 1 in the final.",
+      aside: "AO · RG · USO",
     },
     {
-      id: "masters",
-      eyebrow: "Masters 1000",
-      lines: [{ primary: "Monte-Carlo", secondary: "2014" }],
+      id: "tour",
+      value: "16",
+      label: "ATP singles titles",
+      detail: "Tour-level crowns across hard, clay, and the long grind.",
+      aside: "2006 — 2024",
     },
     {
-      id: "olympics",
-      eyebrow: "Olympics",
-      lines: [{ primary: "Beijing doubles gold", secondary: "2008" }],
-    },
-    {
-      id: "davis",
-      eyebrow: "Davis Cup",
-      lines: [{ primary: "Switzerland", secondary: "2014" }],
+      id: "olympic",
+      value: "1",
+      label: "Olympic doubles gold",
+      detail: "Beijing 2008 — with Roger Federer for Switzerland.",
+      aside: "2008",
     },
     {
       id: "rank",
-      eyebrow: "Peak",
-      lines: [{ primary: "Career-high No. 3", secondary: "2014" }],
+      value: "No. 3",
+      label: "Career-high singles ranking",
+      detail: "Reached 27 January 2014 — the week after Melbourne.",
+      aside: "Peak",
     },
-  ] satisfies TitleChapter[],
+    {
+      id: "years",
+      value: "’14–’16",
+      label: "The championship years",
+      detail: "Three consecutive seasons. Three different majors.",
+      aside: "AO · RG · US Open",
+    },
+  ] satisfies CareerMetric[],
 } as const;

@@ -13,6 +13,10 @@ const columns = [
     links: [
       { label: "ATP Tour bio", href: "https://www.atptour.com/en/players/stan-wawrinka/w367/bio" },
       {
+        label: "Hero reel (ATP Tour)",
+        href: "https://youtu.be/1FD_QiQxrE4",
+      },
+      {
         label: "Retirement note",
         href: "https://www.atptour.com/en/news/wawrinka-retirement-basel-2026",
       },

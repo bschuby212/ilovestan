@@ -80,7 +80,7 @@ export function BeyondCourt() {
               {quote.attribution}
             </footer>
           </blockquote>
-          <div className="relative aspect-[3/4] w-full overflow-hidden md:col-span-5">
+          <div className="media-mask relative aspect-[3/4] w-full overflow-hidden md:col-span-5">
             <Image
               src={stanMedia.portrait.src}
               alt={stanMedia.portrait.alt}

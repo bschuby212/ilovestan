@@ -12,9 +12,10 @@ import {
 import { stanMedia } from "@/data/media";
 import { getGsap } from "@/lib/gsap";
 
-const maxSpeed = Math.max(...backhandPlayers.map((p) => p.avgSpeedMph));
-const maxSpin = Math.max(...backhandPlayers.map((p) => p.spinRpm));
-
+/**
+ * Visual backhand chapter — oversized metrics, no charts/bars.
+ * Numbers count in when the layer enters; peers read as typography, not a dashboard.
+ */
 export function BackhandLab() {
   const rootRef = useRef<HTMLElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
@@ -37,25 +38,25 @@ export function BackhandLab() {
       });
 
       if (stats) {
-        gsap.from(stats.querySelectorAll(".bh-stat-bar"), {
-          scaleX: 0,
-          transformOrigin: "left center",
-          duration: 1.15,
+        gsap.from(stats.querySelectorAll(".bh-stat"), {
+          yPercent: 40,
+          opacity: 0,
+          duration: 0.9,
           stagger: 0.12,
-          ease: "power2.out",
+          ease: "power3.out",
           scrollTrigger: { trigger: stats, start: "top 78%" },
         });
       }
 
-      gsap.from(root.querySelectorAll(".bh-compare-bar"), {
-        scaleX: 0,
-        transformOrigin: "left center",
-        duration: 1.1,
-        stagger: 0.08,
+      gsap.from(root.querySelectorAll(".bh-peer"), {
+        y: 20,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.1,
         ease: "power2.out",
         scrollTrigger: {
-          trigger: root.querySelector(".bh-compare"),
-          start: "top 75%",
+          trigger: root.querySelector(".bh-peers"),
+          start: "top 80%",
         },
       });
     }, root);
@@ -64,13 +65,14 @@ export function BackhandLab() {
   }, []);
 
   const stan = backhandPlayers.find((p) => p.id === "stan")!;
+  const peers = backhandPlayers.filter((p) => p.id !== "stan");
 
   return (
     <section
       id="backhand"
       ref={rootRef}
       className="bg-paper-white text-obsidian"
-      aria-label="Backhand comparison"
+      aria-label="Backhand laboratory"
     >
       <div className="mx-auto max-w-[1440px] px-6 pt-24 md:px-10 md:pt-32">
         <p className="bh-reveal text-[12px] font-medium tracking-[0.22em] text-steel uppercase">
@@ -84,21 +86,21 @@ export function BackhandLab() {
         </p>
       </div>
 
-      {/* Side-by-side: Stan media | callouts */}
+      {/* Full-bleed media → metrics rise through the stroke */}
       <div className="mt-14 grid grid-cols-1 border-y border-concrete-gray lg:grid-cols-2">
-        <div className="bh-reveal relative min-h-[70vh] overflow-hidden bg-obsidian lg:min-h-[80vh]">
+        <div className="bh-reveal media-mask relative min-h-[70vh] overflow-hidden bg-obsidian lg:min-h-[85vh]">
           <Image
             src={stanMedia.hero.src}
             alt={stanMedia.hero.alt}
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-cover object-[center_20%]"
+            className="object-cover object-[center_20%] transition-transform duration-[900ms] ease-out"
           />
           <div
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, rgba(17,17,17,0.15) 0%, rgba(17,17,17,0.55) 100%)",
+                "linear-gradient(180deg, rgba(17,17,17,0.1) 0%, rgba(17,17,17,0.6) 100%)",
             }}
           />
           <div className="absolute right-0 bottom-0 left-0 p-8 text-paper-white md:p-10">
@@ -117,135 +119,65 @@ export function BackhandLab() {
 
         <div
           ref={statsRef}
-          className="flex flex-col justify-between bg-paper-white p-8 md:p-10 lg:p-14"
+          className="flex flex-col justify-center gap-12 bg-paper-white p-8 md:p-10 lg:gap-16 lg:p-14"
         >
-          <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6">
-            {backhandCallouts.map((stat, i) => (
-              <div key={stat.label} className="border-t border-concrete-gray pt-5">
-                <p className="text-[12px] font-medium tracking-[0.16em] text-steel uppercase">
-                  {stat.label}
-                </p>
-                <p className="mt-3 flex items-baseline gap-2">
-                  <AnimatedNumber
-                    value={stat.value}
-                    format={stat.format}
-                    delay={i * 0.12}
-                    duration={1.4}
-                    start="top 82%"
-                    className="display-type text-[clamp(40px,5vw,56px)] text-obsidian tabular-nums"
-                  />
-                  <span className="text-[14px] text-steel">{stat.unit}</span>
-                </p>
-                <p className="mt-3 text-[14px] leading-[1.6] text-steel">{stat.detail}</p>
-                <div className="mt-4 h-px w-full bg-concrete-gray">
-                  <div
-                    className="bh-stat-bar h-px origin-left bg-obsidian"
-                    style={{ width: `${stat.bar}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <ul className="bh-reveal mt-12 space-y-3 border-t border-concrete-gray pt-8">
-            {stan.notes.map((note) => (
-              <li key={note} className="flex gap-3 text-[16px] leading-[1.6] text-obsidian">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-obsidian" />
-                {note}
-              </li>
-            ))}
-          </ul>
+          {backhandCallouts.map((stat, i) => (
+            <div key={stat.label} className="bh-stat">
+              <p className="text-[12px] font-medium tracking-[0.16em] text-steel uppercase">
+                {stat.label}
+              </p>
+              <p className="mt-2 flex items-baseline gap-3">
+                <AnimatedNumber
+                  value={stat.value}
+                  format={stat.format}
+                  delay={i * 0.1}
+                  duration={1.45}
+                  start="top 82%"
+                  className="display-type text-[clamp(56px,9vw,96px)] leading-[0.9] text-obsidian tabular-nums"
+                />
+                <span className="text-[16px] text-steel">{stat.unit}</span>
+              </p>
+              <p className="mt-3 max-w-sm text-[15px] leading-[1.65] text-steel">
+                {stat.detail}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Comparison rows */}
-      <div className="bh-compare mx-auto max-w-[1440px] px-6 py-20 md:px-10 md:py-24">
+      {/* Peers as typography — not a comparison chart */}
+      <div className="bh-peers mx-auto max-w-[1440px] px-6 py-20 md:px-10 md:py-24">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-          <h3 className="text-[20px] font-medium md:text-[24px]">
-            One-handers, measured
-          </h3>
+          <h3 className="text-[20px] font-medium md:text-[24px]">Among the one-handers</h3>
           <p className="max-w-md text-[14px] leading-[1.6] text-steel">
-            Average backhand pace (AO Hawk-Eye) and spin RPM (Tennisplayer chart) —
-            same era conversation, different weapons.
+            Same era conversation — pace and spin as story, not a spreadsheet.
+            Sources linked below.
           </p>
         </div>
 
-        <div className="mt-12 divide-y divide-concrete-gray border-y border-concrete-gray">
-          {backhandPlayers.map((player) => (
-            <article
-              key={player.id}
-              className={`grid grid-cols-1 gap-6 py-8 md:grid-cols-12 md:items-center md:gap-8 ${
-                player.emphasis ? "bg-soft-mist" : ""
-              }`}
-            >
-              <div className="md:col-span-3 md:px-2">
-                <p className="text-[16px] font-medium md:text-[20px]">
+        <ul className="mt-12 divide-y divide-concrete-gray border-y border-concrete-gray">
+          <li className="bh-peer py-8 md:py-10">
+            <p className="text-[12px] tracking-[0.14em] text-steel uppercase">Featured</p>
+            <p className="display-type mt-2 text-[clamp(32px,5vw,52px)]">{stan.name}</p>
+            <p className="mt-3 max-w-2xl text-[16px] leading-[1.65] text-steel">
+              {stan.notes.join(" · ")}
+            </p>
+          </li>
+          {peers.map((player) => (
+            <li key={player.id} className="bh-peer group py-8 md:py-10">
+              <div className="flex flex-col gap-2 md:flex-row md:items-baseline md:justify-between md:gap-10">
+                <p className="text-[20px] font-medium transition-transform duration-500 ease-out group-hover:translate-x-1 md:text-[24px]">
                   {player.name}
                 </p>
-                {player.emphasis && (
-                  <span className="pill pill--dark pill--tag mt-3 inline-flex">
-                    Featured
-                  </span>
-                )}
+                <p className="max-w-lg text-[15px] leading-[1.6] text-steel md:text-right">
+                  {player.profile}
+                </p>
               </div>
-
-              <div className="md:col-span-4">
-                <div className="flex items-baseline justify-between gap-4">
-                  <span className="text-[12px] tracking-[0.14em] text-steel uppercase">
-                    Avg speed
-                  </span>
-                  <span className="text-[16px] font-medium tabular-nums">
-                    <AnimatedNumber
-                      value={player.avgSpeedMph}
-                      duration={1.2}
-                      start="top 85%"
-                    />{" "}
-                    mph
-                  </span>
-                </div>
-                <div className="mt-2 h-1 w-full bg-concrete-gray">
-                  <div
-                    className="bh-compare-bar h-1 origin-left bg-obsidian"
-                    style={{
-                      width: `${(player.avgSpeedMph / maxSpeed) * 100}%`,
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className="md:col-span-4">
-                <div className="flex items-baseline justify-between gap-4">
-                  <span className="text-[12px] tracking-[0.14em] text-steel uppercase">
-                    Spin
-                  </span>
-                  <span className="text-[16px] font-medium tabular-nums">
-                    <AnimatedNumber
-                      value={player.spinRpm}
-                      format="comma"
-                      duration={1.35}
-                      start="top 85%"
-                    />{" "}
-                    RPM
-                  </span>
-                </div>
-                <div className="mt-2 h-1 w-full bg-concrete-gray">
-                  <div
-                    className="bh-compare-bar h-1 origin-left bg-obsidian"
-                    style={{
-                      width: `${(player.spinRpm / maxSpin) * 100}%`,
-                    }}
-                  />
-                </div>
-              </div>
-
-              <p className="text-[14px] leading-[1.5] text-steel md:col-span-12 md:px-2 lg:col-span-1 lg:sr-only">
-                {player.profile}
-              </p>
-            </article>
+            </li>
           ))}
-        </div>
+        </ul>
 
-        <div className="mt-8 flex flex-col gap-2">
+        <div className="mt-10 flex flex-col gap-2">
           <p className="text-[12px] tracking-[0.14em] text-steel uppercase">Sources</p>
           <ul className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-6">
             {backhandSources.map((source) => (
@@ -254,7 +186,7 @@ export function BackhandLab() {
                   href={source.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[14px] text-steel underline-offset-2 transition-opacity hover:opacity-70 hover:underline"
+                  className="link-underline text-[14px] text-steel"
                 >
                   {source.label}
                 </a>

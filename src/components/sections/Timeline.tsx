@@ -38,9 +38,9 @@ export function Timeline() {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: () => `+=${distance() * 1.15}`,
+          end: () => `+=${distance() * 0.85}`,
           pin: pin,
-          scrub: 0.7,
+          scrub: 0.45,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },

@@ -1,17 +1,36 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { getGsap } from "@/lib/gsap";
 
-/** Prefer live hitting clip you supply; fall back to stills montage. */
-const LIVE_SRC = "/video/stan-live.mp4";
-const LIVE_POSTER = "/video/stan-live-poster.jpg";
-const FALLBACK_SRC = "/video/stan-highlights.mp4";
-const FALLBACK_POSTER = "/video/stan-highlights-poster.jpg";
+/** Stan highlight reel — YouTube embed (UI cropped/hidden as much as allowed). */
+const YT_ID = "1FD_QiQxrE4";
+const YT_TITLE = "Stan Wawrinka's Greatest Shots & Moments — ATP Tour";
+const YT_POSTER = `https://i.ytimg.com/vi/${YT_ID}/maxresdefault.jpg`;
+
+function youtubeEmbedSrc(id: string) {
+  const params = new URLSearchParams({
+    autoplay: "1",
+    mute: "1",
+    controls: "0",
+    modestbranding: "1",
+    rel: "0",
+    iv_load_policy: "3",
+    fs: "0",
+    disablekb: "1",
+    playsinline: "1",
+    loop: "1",
+    playlist: id,
+    cc_load_policy: "0",
+    enablejsapi: "1",
+  });
+  return `https://www.youtube.com/embed/${id}?${params.toString()}`;
+}
 
 /**
- * Full-bleed hero video + Framer-style parallax.
- * Drop live match hitting at public/video/stan-live.mp4 (see MEDIA.md).
+ * Full-bleed hero YouTube + Framer-style parallax.
+ * Shorter pin so the handoff into metrics feels continuous — not a long empty scrub.
+ * YouTube chrome suppressed via params + scale/crop; screen-record local mp4 if it still leaks.
  */
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -19,51 +38,6 @@ export function Hero() {
   const mediaRef = useRef<HTMLDivElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [src, setSrc] = useState(FALLBACK_SRC);
-  const [poster, setPoster] = useState(FALLBACK_POSTER);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch(LIVE_SRC, { method: "HEAD" })
-      .then((res) => {
-        if (cancelled || !res.ok) return;
-        setSrc(LIVE_SRC);
-        setPoster(LIVE_POSTER);
-      })
-      .catch(() => undefined);
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const tryPlay = () => {
-      video.muted = true;
-      video.playsInline = true;
-      void video.play().catch(() => undefined);
-    };
-
-    video.load();
-    tryPlay();
-    video.addEventListener("loadeddata", tryPlay);
-    video.addEventListener("canplay", tryPlay);
-
-    const onVisibility = () => {
-      if (document.hidden) video.pause();
-      else tryPlay();
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-
-    return () => {
-      video.removeEventListener("loadeddata", tryPlay);
-      video.removeEventListener("canplay", tryPlay);
-      document.removeEventListener("visibilitychange", onVisibility);
-    };
-  }, [src]);
 
   useEffect(() => {
     const { gsap } = getGsap();
@@ -81,40 +55,42 @@ export function Hero() {
       gsap.set(words, { yPercent: 110, opacity: 0 });
       gsap.set(copy.querySelectorAll(".hero-fade"), { opacity: 0, y: 16 });
       gsap.set(scrollHint, { opacity: 0 });
-      gsap.set(media, { scale: 1.24, yPercent: -6 });
+      gsap.set(media, { scale: 1.18, yPercent: -4 });
 
       const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
       intro
-        .to(media, { scale: 1.12, yPercent: 0, duration: 2.4, ease: "power2.out" }, 0)
+        .to(media, { scale: 1.08, yPercent: 0, duration: 2.2, ease: "power2.out" }, 0)
         .to(words, { yPercent: 0, opacity: 1, duration: 1.05, stagger: 0.1 }, 0.35)
         .to(
           copy.querySelectorAll(".hero-fade"),
           { opacity: 1, y: 0, duration: 0.7, stagger: 0.08 },
           0.95,
         )
-        .to(scrollHint, { opacity: 1, duration: 0.5 }, 1.35);
+        .to(scrollHint, { opacity: 1, duration: 0.5 }, 1.3);
 
       if (reduce) {
-        gsap.set(media, { scale: 1.08, yPercent: 0 });
+        gsap.set(media, { scale: 1.05, yPercent: 0 });
         return;
       }
 
+      // Compact scrub — leave into metrics on the same dark field
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
           end: "bottom bottom",
           pin: pin,
-          scrub: 0.55,
+          scrub: 0.4,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
 
-      tl.to(media, { yPercent: 22, scale: 1.04, ease: "none", duration: 1 }, 0);
-      tl.to(copy, { yPercent: -58, ease: "none", duration: 1 }, 0);
-      tl.to(scrollHint, { opacity: 0, y: -20, ease: "none", duration: 0.2 }, 0);
-      tl.to(copy, { opacity: 0.15, ease: "none", duration: 0.3 }, 0.7);
+      tl.to(media, { yPercent: 14, scale: 1.02, ease: "none", duration: 1 }, 0);
+      tl.to(copy, { yPercent: -42, opacity: 0, ease: "none", duration: 1 }, 0);
+      tl.to(scrollHint, { opacity: 0, y: -16, ease: "none", duration: 0.2 }, 0);
+      // Soft dissolve toward next section (metrics share obsidian)
+      tl.to(media, { opacity: 0.35, ease: "none", duration: 0.35 }, 0.65);
     }, section);
 
     return () => ctx.revert();
@@ -124,31 +100,39 @@ export function Hero() {
     <section
       id="top"
       ref={sectionRef}
-      className="relative h-[260svh] bg-obsidian text-paper-white"
+      className="relative h-[170svh] bg-obsidian text-paper-white"
       aria-label="Cinematic introduction"
     >
       <div ref={pinRef} className="relative h-[100svh] min-h-[640px] overflow-hidden">
-        <div ref={mediaRef} className="absolute inset-[-14%] will-change-transform">
-          <video
-            ref={videoRef}
-            key={src}
-            className="absolute inset-0 h-full w-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            poster={poster}
-            aria-label="Stan Wawrinka live hitting highlights"
-          >
-            <source src={src} type="video/mp4" />
-          </video>
+        <div ref={mediaRef} className="absolute inset-[-10%] will-change-transform">
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 overflow-hidden bg-obsidian bg-cover bg-center"
+            style={{ backgroundImage: `url(${YT_POSTER})` }}
+          >
+            <iframe
+              title={YT_TITLE}
+              src={youtubeEmbedSrc(YT_ID)}
+              className="pointer-events-none absolute top-1/2 left-1/2 h-[185%] w-[185%] max-w-none -translate-x-1/2 -translate-y-1/2 border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen={false}
+              loading="eager"
+              referrerPolicy="strict-origin-when-cross-origin"
+            />
+          </div>
+          <div
+            className="pointer-events-none absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, rgba(17,17,17,0.52) 0%, rgba(17,17,17,0.18) 40%, rgba(17,17,17,0.82) 100%)",
+                "linear-gradient(180deg, rgba(17,17,17,0.5) 0%, rgba(17,17,17,0.18) 38%, rgba(17,17,17,0.88) 100%)",
             }}
+          />
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 h-[16%] bg-gradient-to-b from-obsidian via-obsidian/65 to-transparent"
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[24%] bg-gradient-to-t from-obsidian via-obsidian/80 to-transparent"
+            aria-hidden
           />
         </div>
 
