@@ -177,51 +177,61 @@ export const timeline = [
     year: "2002",
     title: "Turns professional",
     body: "Begins the ATP journey from Lausanne.",
+    image: "portrait" as const,
   },
   {
     year: "2008",
     title: "Olympic gold — Beijing",
     body: "Men's doubles champion with Roger Federer.",
+    image: "wimbledon" as const,
   },
   {
     year: "2013",
     title: "Breakthrough season",
     body: "First Masters final in Madrid; Swiss of the Year.",
+    image: "usOpen" as const,
   },
   {
     year: "2014",
     title: "Australian Open champion",
     body: "First major — defeats world No. 1 Nadal in the final.",
+    image: "serve" as const,
   },
   {
     year: "2014",
     title: "Davis Cup & Monte-Carlo",
     body: "Switzerland's first Davis Cup; Masters title over Federer.",
+    image: "heroDepth" as const,
   },
   {
     year: "2015",
     title: "Roland-Garros champion",
     body: "Second Slam — defeats Djokovic on clay in Paris.",
+    image: "queens" as const,
   },
   {
     year: "2016",
     title: "US Open champion",
     body: "Third Slam — again beats Djokovic in a major final.",
+    image: "usOpen" as const,
   },
   {
     year: "2017",
     title: "Knee surgeries",
     body: "Two left-knee operations interrupt a streak of 50 straight Slams.",
+    image: "portrait" as const,
   },
   {
     year: "2021",
     title: "Foot surgeries & return",
     body: "Further setbacks; keeps fighting back onto tour.",
+    image: "hero" as const,
   },
   {
     year: "2026",
     title: "Final season",
     body: "Retires at Swiss Indoors Basel after a career of 590 wins.",
+    image: "basel" as const,
   },
 ] as const;
 

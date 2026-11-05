@@ -1,7 +1,9 @@
 /**
- * Title-by-title Grand Slam parade — typography format (year → tournament → note).
+ * Title-by-title Grand Slam parade — typography + tournament photo behind.
  * Verified finals / scores from ATP Tour records.
  */
+
+import type { StanMediaKey } from "@/data/media";
 
 export type CareerMetric = {
   id: string;
@@ -9,6 +11,8 @@ export type CareerMetric = {
   label: string;
   detail: string;
   aside?: string;
+  /** stanMedia key for the scroll-behind photo */
+  image: StanMediaKey;
 };
 
 export const titlesOverview = {
@@ -20,6 +24,7 @@ export const titlesOverview = {
       label: "Australian Open",
       detail: "Defeated the world No. 1 in the final for his first major.",
       aside: "Final · Rafael Nadal · 6–3, 6–2, 3–6, 6–3",
+      image: "serve",
     },
     {
       id: "rg-2015",
@@ -27,6 +32,7 @@ export const titlesOverview = {
       label: "Roland-Garros",
       detail: "Claimed the Coupe des Mousquetaires on his favorite surface.",
       aside: "Final · Novak Djokovic · 4–6, 6–4, 6–3, 6–4",
+      image: "queens",
     },
     {
       id: "uso-2016",
@@ -34,6 +40,7 @@ export const titlesOverview = {
       label: "US Open",
       detail: "Third major — again beating the reigning world No. 1 in a Slam final.",
       aside: "Final · Novak Djokovic · 6–7, 6–4, 7–5, 6–3",
+      image: "usOpen",
     },
   ] satisfies CareerMetric[],
 } as const;
