@@ -5,9 +5,8 @@ export const site = {
   credit: "Independent, unofficial fan tribute. Not affiliated with Stan Wawrinka or the ATP.",
 };
 
-/** Primary section anchors — dropdown label tracks the active one on scroll */
+/** Footer explore links (nav chrome is logo + socials only) */
 export const navLinks = [
-  { href: "#top", label: "Home", id: "top" },
   { href: "#grand-slams", label: "Grand Slams", id: "grand-slams" },
   { href: "#fail-better", label: "Fail Better", id: "fail-better" },
   { href: "#backhand", label: "Backhand", id: "backhand" },
