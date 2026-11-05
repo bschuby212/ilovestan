@@ -1,16 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import { Clock3 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { SectionHeading } from "@/components/SectionHeading";
 import { timeline } from "@/data/content";
-import { stanMedia } from "@/data/media";
 import { getGsap } from "@/lib/gsap";
 
 /**
- * Real vertical timeline — year markers on a spine, photo + copy per beat.
- * Scroll moves down the years (not a pinned story scrub).
+ * Compact vertical timeline — year spine + title/body only. No per-item photos.
  */
 export function Timeline() {
   const rootRef = useRef<HTMLElement>(null);
@@ -25,11 +22,11 @@ export function Timeline() {
     const ctx = gsap.context(() => {
       items.forEach((el) => {
         gsap.from(el, {
-          y: 28,
+          y: 18,
           opacity: 0,
-          duration: 0.7,
+          duration: 0.55,
           ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 85%" },
+          scrollTrigger: { trigger: el, start: "top 88%" },
         });
       });
     }, root);
@@ -44,53 +41,34 @@ export function Timeline() {
       className="bg-paper-white text-obsidian"
       aria-label="Career timeline"
     >
-      <div className="mx-auto max-w-[1440px] px-6 py-20 md:px-10 md:py-28">
+      <div className="mx-auto max-w-[1440px] px-6 py-16 md:px-10 md:py-20">
         <SectionHeading
           eyebrow="Career timeline"
           title="Follow the years"
           icon={Clock3}
         />
 
-        <ol className="relative mt-16 border-l border-concrete-gray md:mt-20">
-          {timeline.map((item) => {
-            const photo = stanMedia[item.image];
-            return (
-              <li
-                key={`${item.year}-${item.title}`}
-                className="tl-row relative grid grid-cols-1 gap-6 py-10 pl-8 md:grid-cols-12 md:gap-10 md:py-12 md:pl-12"
-              >
-                <span
-                  className="absolute top-12 -left-[5px] h-2.5 w-2.5 rounded-full bg-obsidian md:top-14"
-                  aria-hidden
-                />
-
-                <div className="md:col-span-2">
-                  <p className="display-type text-[clamp(32px,4vw,48px)] leading-none text-obsidian/25">
-                    {item.year}
-                  </p>
-                </div>
-
-                <div className="media-mask relative aspect-[16/10] w-full overflow-hidden bg-soft-mist md:col-span-4">
-                  <Image
-                    src={photo.src}
-                    alt={photo.alt}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover"
-                  />
-                </div>
-
-                <div className="md:col-span-6 md:pt-1">
-                  <h3 className="text-[20px] leading-[1.35] font-medium md:text-[24px]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 max-w-xl text-[16px] leading-[1.7] text-steel">
-                    {item.body}
-                  </p>
-                </div>
-              </li>
-            );
-          })}
+        <ol className="relative mt-12 border-l border-concrete-gray md:mt-14">
+          {timeline.map((item) => (
+            <li
+              key={`${item.year}-${item.title}`}
+              className="tl-row relative flex flex-col gap-1 py-5 pl-7 md:flex-row md:items-baseline md:gap-8 md:py-6 md:pl-10"
+            >
+              <span
+                className="absolute top-7 -left-[4px] h-2 w-2 rounded-full bg-obsidian md:top-8"
+                aria-hidden
+              />
+              <p className="w-[4.5rem] shrink-0 text-[14px] font-medium tabular-nums text-steel md:w-16">
+                {item.year}
+              </p>
+              <div className="min-w-0 flex-1 md:flex md:items-baseline md:justify-between md:gap-10">
+                <h3 className="text-[16px] font-medium md:text-[18px]">{item.title}</h3>
+                <p className="mt-1 max-w-xl text-[15px] leading-[1.55] text-steel md:mt-0 md:text-right">
+                  {item.body}
+                </p>
+              </div>
+            </li>
+          ))}
         </ol>
       </div>
     </section>
