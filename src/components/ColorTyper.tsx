@@ -6,22 +6,22 @@ import { getGsap } from "@/lib/gsap";
 type Props = {
   text: string;
   className?: string;
-  /** Muted start color */
   from?: string;
-  /** Active end color */
   to?: string;
-  /** Split by word or character */
   split?: "word" | "char";
-  /** ScrollTrigger scrub (number) or true */
-  scrub?: number | boolean;
-  /** Optional start/end for ScrollTrigger */
-  start?: string;
-  end?: string;
+  /** Delay before cascade starts (seconds) */
+  delay?: number;
+  /** Duration of each part’s color change */
+  colorTime?: number;
+  /** Stagger between parts */
+  stagger?: number;
+  /** Replay when leaving / re-entering view */
+  replay?: boolean;
 };
 
 /**
- * Framer Color Typer–style effect: muted → active color cascade,
- * scrubbed by scroll (Apple-store typed highlight).
+ * Framer Color Typer — in-view animation (not scroll-scrubbed).
+ * Muted Color 1 → active Color 2, fast staggered cascade.
  */
 export function ColorTyper({
   text,
@@ -29,14 +29,15 @@ export function ColorTyper({
   from = "var(--color-faint-gray)",
   to = "var(--color-paper-white)",
   split = "word",
-  scrub = 0.6,
-  start = "top 75%",
-  end = "center 35%",
+  delay = 0.05,
+  colorTime = 0.18,
+  stagger = 0.045,
+  replay = true,
 }: Props) {
   const rootRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    const { gsap } = getGsap();
+    const { gsap, ScrollTrigger } = getGsap();
     const root = rootRef.current;
     if (!root) return;
 
@@ -51,26 +52,39 @@ export function ColorTyper({
         return;
       }
 
-      gsap.to(parts, {
-        color: to,
-        ease: "none",
-        stagger: 0.05,
-        scrollTrigger: {
-          trigger: root,
-          start,
-          end,
-          scrub,
+      const tween = gsap.fromTo(
+        parts,
+        { color: from },
+        {
+          color: to,
+          duration: colorTime,
+          ease: "power1.out",
+          stagger,
+          delay,
+          paused: true,
+        },
+      );
+
+      ScrollTrigger.create({
+        trigger: root,
+        start: "top 82%",
+        onEnter: () => tween.restart(),
+        onEnterBack: () => {
+          if (replay) tween.restart();
+        },
+        onLeaveBack: () => {
+          if (replay) {
+            tween.pause(0);
+            gsap.set(parts, { color: from });
+          }
         },
       });
     }, root);
 
     return () => ctx.revert();
-  }, [from, to, scrub, start, end]);
+  }, [from, to, delay, colorTime, stagger, replay]);
 
-  const tokens =
-    split === "char"
-      ? Array.from(text)
-      : text.split(/(\s+)/);
+  const tokens = split === "char" ? Array.from(text) : text.split(/(\s+)/);
 
   return (
     <p ref={rootRef} className={className} aria-label={text}>
@@ -82,7 +96,7 @@ export function ColorTyper({
           return <span key={`s-${i}`}>{"\u00A0"}</span>;
         }
         return (
-          <span key={`${token}-${i}`} className="ct-part inline">
+          <span key={`${i}-${token}`} className="ct-part inline">
             {token}
           </span>
         );
