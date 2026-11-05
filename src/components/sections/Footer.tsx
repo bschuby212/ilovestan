@@ -4,9 +4,7 @@ import { stanMedia } from "@/data/media";
 const columns = [
   {
     title: "Explore",
-    links: navLinks
-      .filter((l) => l.id !== "top")
-      .map((l) => ({ label: l.label, href: l.href })),
+    links: navLinks.map((l) => ({ label: l.label, href: l.href })),
   },
   {
     title: "Sources",
