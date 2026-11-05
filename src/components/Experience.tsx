@@ -7,10 +7,9 @@ import { TitlesOverview } from "@/components/sections/TitlesOverview";
 import { FailBetter } from "@/components/sections/FailBetter";
 import { BackhandLab } from "@/components/sections/BackhandLab";
 import { Testimonials } from "@/components/sections/Testimonials";
-import { TitlesCanvas } from "@/components/sections/TitlesCanvas";
+import { TourTitles } from "@/components/sections/TourTitles";
 import { BeyondCourt } from "@/components/sections/BeyondCourt";
 import { Timeline } from "@/components/sections/Timeline";
-import { Tribute } from "@/components/sections/Tribute";
 import { Footer } from "@/components/sections/Footer";
 
 export function Experience() {
@@ -23,10 +22,9 @@ export function Experience() {
         <FailBetter />
         <BackhandLab />
         <Testimonials />
-        <TitlesCanvas />
+        <TourTitles />
         <BeyondCourt />
         <Timeline />
-        <Tribute />
       </main>
       <Footer />
     </SmoothScroll>

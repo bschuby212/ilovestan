@@ -11,10 +11,9 @@ export const navLinks = [
   { href: "#fail-better", label: "Fail Better", id: "fail-better" },
   { href: "#backhand", label: "Backhand", id: "backhand" },
   { href: "#testimonials", label: "Voices", id: "testimonials" },
-  { href: "#achievements", label: "Record", id: "achievements" },
+  { href: "#achievements", label: "Tour titles", id: "achievements" },
   { href: "#beyond", label: "Beyond", id: "beyond" },
   { href: "#timeline", label: "Timeline", id: "timeline" },
-  { href: "#tribute", label: "Legacy", id: "tribute" },
 ] as const;
 
 /** Official Stan socials — filler logo for now; real mark later */

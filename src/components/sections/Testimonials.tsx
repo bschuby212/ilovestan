@@ -5,9 +5,7 @@ import { useCallback, useState } from "react";
 import { SectionHeading } from "@/components/SectionHeading";
 import { testimonials, testimonialsSection } from "@/data/testimonials";
 
-/**
- * Clean quote carousel — paper surface, restrained type, no full-bleed wash.
- */
+/** Compact quote block — less empty air, clearer controls. */
 export function Testimonials() {
   const [index, setIndex] = useState(0);
   const count = testimonials.length;
@@ -24,67 +22,63 @@ export function Testimonials() {
       className="bg-paper-white text-obsidian"
       aria-label="What they said"
     >
-      <div className="mx-auto max-w-[1440px] px-6 py-20 md:px-10 md:py-28">
-        <SectionHeading
-          eyebrow={testimonialsSection.eyebrow}
-          title={testimonialsSection.title}
-          icon={MessagesSquare}
-        />
-
-        <div className="mt-14 max-w-3xl md:mt-16">
-          <blockquote>
-            <p className="text-[20px] leading-[1.55] font-medium md:text-[24px] md:leading-[1.5]">
-              “{active.quote}”
-            </p>
-          </blockquote>
-
-          <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-[16px] font-medium">{active.name}</p>
-              <p className="mt-1 text-[14px] text-steel">{active.role}</p>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => go(index - 1)}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-concrete-gray transition-opacity hover:opacity-70"
-                aria-label="Previous"
-              >
-                ←
-              </button>
-              <span className="min-w-[4ch] text-center text-[13px] tabular-nums text-steel">
-                {index + 1} / {count}
-              </span>
-              <button
-                type="button"
-                onClick={() => go(index + 1)}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-concrete-gray transition-opacity hover:opacity-70"
-                aria-label="Next"
-              >
-                →
-              </button>
-            </div>
+      <div className="mx-auto max-w-[1440px] px-6 py-16 md:px-10 md:py-20">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <SectionHeading
+            eyebrow={testimonialsSection.eyebrow}
+            title={testimonialsSection.title}
+            icon={MessagesSquare}
+          />
+          <div className="flex items-center gap-3 md:pb-1">
+            <button
+              type="button"
+              onClick={() => go(index - 1)}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-concrete-gray text-[14px] transition-opacity hover:opacity-70"
+              aria-label="Previous quote"
+            >
+              ←
+            </button>
+            <span className="min-w-[4ch] text-center text-[13px] tabular-nums text-steel">
+              {index + 1} / {count}
+            </span>
+            <button
+              type="button"
+              onClick={() => go(index + 1)}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-concrete-gray text-[14px] transition-opacity hover:opacity-70"
+              aria-label="Next quote"
+            >
+              →
+            </button>
           </div>
-
-          <ul className="mt-10 flex flex-wrap gap-2">
-            {testimonials.map((t, i) => (
-              <li key={t.id}>
-                <button
-                  type="button"
-                  onClick={() => go(i)}
-                  className={`rounded-[30px] px-3 py-1.5 text-[12px] font-medium tracking-[0.04em] transition-colors ${
-                    i === index
-                      ? "bg-obsidian text-paper-white"
-                      : "bg-soft-mist text-steel hover:text-obsidian"
-                  }`}
-                >
-                  {t.mark}
-                </button>
-              </li>
-            ))}
-          </ul>
         </div>
+
+        <blockquote className="mt-10 max-w-3xl border-t border-concrete-gray pt-8 md:mt-12">
+          <p className="text-[20px] leading-[1.5] font-medium md:text-[24px] md:leading-[1.45]">
+            “{active.quote}”
+          </p>
+          <footer className="mt-6">
+            <p className="text-[15px] font-medium">{active.name}</p>
+            <p className="mt-1 text-[13px] text-steel">{active.role}</p>
+          </footer>
+        </blockquote>
+
+        <ul className="mt-8 flex flex-wrap gap-2">
+          {testimonials.map((t, i) => (
+            <li key={t.id}>
+              <button
+                type="button"
+                onClick={() => go(i)}
+                className={`rounded-full px-3 py-1.5 text-[12px] font-medium tracking-[0.04em] transition-colors ${
+                  i === index
+                    ? "bg-obsidian text-paper-white"
+                    : "bg-soft-mist text-steel hover:text-obsidian"
+                }`}
+              >
+                {t.mark}
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

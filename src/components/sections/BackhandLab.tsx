@@ -1,10 +1,7 @@
 "use client";
 
-import { Crosshair } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
-import { SectionHeading } from "@/components/SectionHeading";
-import { backhandCallouts, backhandSection } from "@/data/backhand";
 import { getGsap } from "@/lib/gsap";
 
 const BH_YT_ID = "kyplW6HyR9c";
@@ -31,7 +28,33 @@ function backhandEmbedSrc() {
   return `https://www.youtube-nocookie.com/embed/${BH_YT_ID}?${params.toString()}`;
 }
 
-/** Left: backhand video (no captions/chrome). Right: title + clean stacked metrics. */
+const stats = [
+  {
+    label: "Average pace",
+    value: 75,
+    unit: "mph",
+    detail: "Hawk-Eye · AO 2014–16",
+    format: "plain" as const,
+  },
+  {
+    label: "Average spin",
+    value: 2500,
+    unit: "RPM",
+    detail: "One-hand drive",
+    format: "comma" as const,
+  },
+  {
+    label: "Final winners",
+    value: 60,
+    unit: "RG ’15",
+    detail: "Roland-Garros final",
+    format: "plain" as const,
+  },
+];
+
+/**
+ * Backhand only — winners video + three clear stats. No career clutter.
+ */
 export function BackhandLab() {
   const rootRef = useRef<HTMLElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -51,13 +74,13 @@ export function BackhandLab() {
 
     const ctx = gsap.context(() => {
       if (!reduce) {
-        gsap.from(root.querySelectorAll(".bh-stat, .bh-head"), {
-          y: 20,
+        gsap.from(root.querySelectorAll(".bh-fade"), {
+          y: 22,
           opacity: 0,
-          duration: 0.7,
+          duration: 0.75,
           stagger: 0.08,
           ease: "power3.out",
-          scrollTrigger: { trigger: root, start: "top 72%" },
+          scrollTrigger: { trigger: root, start: "top 70%" },
         });
       }
 
@@ -79,76 +102,80 @@ export function BackhandLab() {
     <section
       id="backhand"
       ref={rootRef}
-      className="bg-paper-white text-obsidian"
-      aria-label="Backhand"
+      className="relative min-h-[100svh] overflow-hidden bg-obsidian text-paper-white"
+      aria-label="One-handed backhand"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-2">
-        <div className="relative min-h-[55vh] overflow-hidden bg-obsidian lg:min-h-[100svh]">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${BH_POSTER})` }}
-          />
-          <iframe
-            ref={iframeRef}
-            title="Stan Wawrinka backhand winners"
-            src={backhandEmbedSrc()}
-            width={1920}
-            height={1080}
-            tabIndex={-1}
-            className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-0"
-            style={{
-              width: "max(100%, 177.78vh)",
-              height: "max(100%, 56.25vw)",
-              minWidth: 1280,
-              minHeight: 720,
-            }}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-            allowFullScreen={false}
-            loading="lazy"
-          />
-          <div className="pointer-events-auto absolute inset-0 z-[1]" aria-hidden />
-          <div
-            className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[18%] bg-gradient-to-b from-obsidian via-obsidian/65 to-transparent"
-            aria-hidden
-          />
-          {/* Heavy bottom mask kills YT captions */}
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[30%] bg-gradient-to-t from-obsidian via-obsidian/85 to-transparent"
-            aria-hidden
-          />
-        </div>
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${BH_POSTER})` }}
+      />
+      <iframe
+        ref={iframeRef}
+        title="Stan Wawrinka backhand winners"
+        src={backhandEmbedSrc()}
+        width={1920}
+        height={1080}
+        tabIndex={-1}
+        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-0"
+        style={{
+          width: "max(100%, 177.78vh)",
+          height: "max(100%, 56.25vw)",
+          minWidth: 1280,
+          minHeight: 720,
+        }}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+        allowFullScreen={false}
+        loading="lazy"
+      />
+      <div className="pointer-events-auto absolute inset-0 z-[1]" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-0 z-[2]"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(17,17,17,0.2) 0%, rgba(17,17,17,0.45) 48%, rgba(17,17,17,0.78) 100%)",
+        }}
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-[30%] bg-gradient-to-t from-obsidian via-obsidian/70 to-transparent"
+        aria-hidden
+      />
 
-        <div className="flex flex-col justify-center px-6 py-16 md:px-10 md:py-20 lg:px-14 lg:py-24">
-          <div className="bh-head">
-            <SectionHeading
-              eyebrow={backhandSection.eyebrow}
-              title={backhandSection.title}
-              icon={Crosshair}
-            />
-            <p className="mt-4 max-w-md text-[16px] leading-[1.75] text-steel">
-              {backhandSection.lede}
-            </p>
-          </div>
+      <div className="relative z-10 flex min-h-[100svh] items-center justify-end px-6 py-20 md:px-10 lg:px-14">
+        <div className="w-full max-w-[480px]">
+          <h2 className="bh-fade display-type text-[clamp(32px,4.5vw,48px)] leading-[1.05] text-paper-white">
+            One-handed
+            <br />
+            backhand
+          </h2>
 
-          <div className="mt-14 flex flex-col gap-12 md:mt-16 md:gap-14">
-            {backhandCallouts.map((stat, i) => (
-              <div key={stat.label} className="bh-stat">
-                <p className="text-[12px] font-medium tracking-[0.16em] text-steel uppercase">
+          <div className="bh-fade mt-10 grid grid-cols-1 border border-white/30 bg-obsidian/50 backdrop-blur-[1px] sm:grid-cols-3">
+            {stats.map((stat, i) => (
+              <div
+                key={stat.label}
+                className={`px-5 py-6 ${
+                  i < stats.length - 1
+                    ? "border-b border-white/25 sm:border-r sm:border-b-0"
+                    : ""
+                }`}
+              >
+                <p className="text-[10px] font-medium tracking-[0.16em] text-paper-white/65 uppercase">
                   {stat.label}
                 </p>
-                <p className="mt-2 flex items-baseline gap-3">
+                <p className="mt-3 flex items-baseline gap-2">
                   <AnimatedNumber
                     value={stat.value}
                     format={stat.format}
                     delay={i * 0.08}
-                    duration={1.3}
-                    start="top 85%"
-                    className="display-type text-[clamp(40px,6vw,64px)] leading-[0.9] text-obsidian tabular-nums"
+                    duration={1.2}
+                    start="top 80%"
+                    className="display-type text-[40px] leading-none tabular-nums text-paper-white"
                   />
-                  <span className="text-[13px] tracking-[0.06em] text-steel uppercase">
+                  <span className="text-[12px] tracking-[0.06em] text-paper-white/60 uppercase">
                     {stat.unit}
                   </span>
                 </p>
+                <p className="mt-2 text-[12px] text-paper-white/55">{stat.detail}</p>
               </div>
             ))}
           </div>

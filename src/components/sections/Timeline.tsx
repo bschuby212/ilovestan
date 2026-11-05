@@ -7,7 +7,7 @@ import { timeline } from "@/data/content";
 import { getGsap } from "@/lib/gsap";
 
 /**
- * Compact vertical timeline — year spine + title/body only. No per-item photos.
+ * Compact career timeline — year + title + one line. No photos.
  */
 export function Timeline() {
   const rootRef = useRef<HTMLElement>(null);
@@ -18,16 +18,14 @@ export function Timeline() {
     if (!root) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const items = root.querySelectorAll(".tl-row");
     const ctx = gsap.context(() => {
-      items.forEach((el) => {
-        gsap.from(el, {
-          y: 18,
-          opacity: 0,
-          duration: 0.55,
-          ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 88%" },
-        });
+      gsap.from(root.querySelectorAll(".tl-row"), {
+        y: 16,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.05,
+        ease: "power2.out",
+        scrollTrigger: { trigger: root.querySelector(".tl-list"), start: "top 80%" },
       });
     }, root);
 
@@ -41,32 +39,24 @@ export function Timeline() {
       className="bg-paper-white text-obsidian"
       aria-label="Career timeline"
     >
-      <div className="mx-auto max-w-[1440px] px-6 py-16 md:px-10 md:py-20">
+      <div className="mx-auto max-w-[900px] px-6 py-16 md:px-10 md:py-20">
         <SectionHeading
           eyebrow="Career timeline"
-          title="Follow the years"
+          title="The years that mattered"
           icon={Clock3}
         />
 
-        <ol className="relative mt-12 border-l border-concrete-gray md:mt-14">
+        <ol className="tl-list mt-12 space-y-0 md:mt-14">
           {timeline.map((item) => (
             <li
               key={`${item.year}-${item.title}`}
-              className="tl-row relative flex flex-col gap-1 py-5 pl-7 md:flex-row md:items-baseline md:gap-8 md:py-6 md:pl-10"
+              className="tl-row grid grid-cols-[4.5rem_1fr] gap-4 border-t border-concrete-gray py-5 md:grid-cols-[5.5rem_1fr_1.2fr] md:gap-8 md:py-6"
             >
-              <span
-                className="absolute top-7 -left-[4px] h-2 w-2 rounded-full bg-obsidian md:top-8"
-                aria-hidden
-              />
-              <p className="w-[4.5rem] shrink-0 text-[14px] font-medium tabular-nums text-steel md:w-16">
-                {item.year}
+              <p className="text-[14px] font-medium tabular-nums text-steel">{item.year}</p>
+              <h3 className="text-[16px] font-medium md:text-[17px]">{item.title}</h3>
+              <p className="col-span-2 text-[14px] leading-[1.55] text-steel md:col-span-1 md:text-[15px]">
+                {item.body}
               </p>
-              <div className="min-w-0 flex-1 md:flex md:items-baseline md:justify-between md:gap-10">
-                <h3 className="text-[16px] font-medium md:text-[18px]">{item.title}</h3>
-                <p className="mt-1 max-w-xl text-[15px] leading-[1.55] text-steel md:mt-0 md:text-right">
-                  {item.body}
-                </p>
-              </div>
             </li>
           ))}
         </ol>
