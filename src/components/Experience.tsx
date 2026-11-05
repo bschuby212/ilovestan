@@ -4,6 +4,7 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { GrandSlam } from "@/components/sections/GrandSlam";
+import { BackhandLab } from "@/components/sections/BackhandLab";
 import { Achievements } from "@/components/sections/Achievements";
 import { BeyondCourt } from "@/components/sections/BeyondCourt";
 import { Timeline } from "@/components/sections/Timeline";
@@ -17,6 +18,7 @@ export function Experience() {
       <main>
         <Hero />
         <GrandSlam />
+        <BackhandLab />
         <Achievements />
         <BeyondCourt />
         <Timeline />

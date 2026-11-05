@@ -7,6 +7,7 @@ export const site = {
 
 export const navLinks = [
   { href: "#grand-slams", label: "Grand Slams" },
+  { href: "#backhand", label: "Backhand" },
   { href: "#achievements", label: "Titles" },
   { href: "#beyond", label: "Beyond" },
   { href: "#timeline", label: "Timeline" },
