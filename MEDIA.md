@@ -9,7 +9,7 @@ public/video/stan-live.mp4
 public/video/stan-live-poster.jpg   # optional still frame
 ```
 
-If that file is missing, it falls back to a muted YouTube embed of https://youtu.be/1FD_QiQxrE4 with controls off + full click shield + edge masks. YouTube can still flash chrome / bot walls — **screen-record and drop the mp4 above** for a clean hero.
+If that file is missing, hero uses a sharp Stan still (no YouTube — embeds were hitting bot walls and breaking the section under the hero). **Screen-record your clip and drop it at the path above** when you want live video.
 
 ## Optional local clip (preferred long-term)
 

@@ -31,9 +31,7 @@ function backhandEmbedSrc() {
   return `https://www.youtube-nocookie.com/embed/${BH_YT_ID}?${params.toString()}`;
 }
 
-/**
- * Video (autoplay in view, no chrome) | title + stacked metrics with explanations.
- */
+/** Left: backhand video (no captions/chrome). Right: title + clean stacked metrics. */
 export function BackhandLab() {
   const rootRef = useRef<HTMLElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -54,10 +52,10 @@ export function BackhandLab() {
     const ctx = gsap.context(() => {
       if (!reduce) {
         gsap.from(root.querySelectorAll(".bh-stat, .bh-head"), {
-          y: 24,
+          y: 20,
           opacity: 0,
-          duration: 0.75,
-          stagger: 0.1,
+          duration: 0.7,
+          stagger: 0.08,
           ease: "power3.out",
           scrollTrigger: { trigger: root, start: "top 72%" },
         });
@@ -84,7 +82,7 @@ export function BackhandLab() {
       className="bg-paper-white text-obsidian"
       aria-label="Backhand"
     >
-      <div className="grid grid-cols-1 border-y border-concrete-gray lg:grid-cols-2">
+      <div className="grid grid-cols-1 lg:grid-cols-2">
         <div className="relative min-h-[55vh] overflow-hidden bg-obsidian lg:min-h-[100svh]">
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -107,16 +105,15 @@ export function BackhandLab() {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
             allowFullScreen={false}
             loading="lazy"
-            referrerPolicy="strict-origin-when-cross-origin"
           />
-          {/* Kill YT chrome / play button / captions */}
           <div className="pointer-events-auto absolute inset-0 z-[1]" aria-hidden />
           <div
-            className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[16%] bg-gradient-to-b from-obsidian via-obsidian/60 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[18%] bg-gradient-to-b from-obsidian via-obsidian/65 to-transparent"
             aria-hidden
           />
+          {/* Heavy bottom mask kills YT captions */}
           <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[22%] bg-gradient-to-t from-obsidian via-obsidian/70 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[30%] bg-gradient-to-t from-obsidian via-obsidian/85 to-transparent"
             aria-hidden
           />
         </div>
@@ -133,27 +130,24 @@ export function BackhandLab() {
             </p>
           </div>
 
-          <div className="mt-14 flex flex-col gap-14 md:mt-16 md:gap-16">
+          <div className="mt-14 flex flex-col gap-12 md:mt-16 md:gap-14">
             {backhandCallouts.map((stat, i) => (
-              <div key={stat.label} className="bh-stat border-t border-concrete-gray pt-6">
+              <div key={stat.label} className="bh-stat">
                 <p className="text-[12px] font-medium tracking-[0.16em] text-steel uppercase">
                   {stat.label}
                 </p>
-                <p className="mt-3 flex items-baseline gap-3">
+                <p className="mt-2 flex items-baseline gap-3">
                   <AnimatedNumber
                     value={stat.value}
                     format={stat.format}
-                    delay={i * 0.1}
-                    duration={1.4}
+                    delay={i * 0.08}
+                    duration={1.3}
                     start="top 85%"
-                    className="display-type text-[clamp(48px,7vw,80px)] leading-[0.9] text-obsidian tabular-nums"
+                    className="display-type text-[clamp(40px,6vw,64px)] leading-[0.9] text-obsidian tabular-nums"
                   />
-                  <span className="text-[14px] tracking-[0.06em] text-steel uppercase">
+                  <span className="text-[13px] tracking-[0.06em] text-steel uppercase">
                     {stat.unit}
                   </span>
-                </p>
-                <p className="mt-4 max-w-sm text-[15px] leading-[1.65] text-steel">
-                  {stat.detail}
                 </p>
               </div>
             ))}

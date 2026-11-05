@@ -1,41 +1,18 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { getGsap } from "@/lib/gsap";
+import { stanMedia } from "@/data/media";
 
-/** Prefer a local screen-record — zero YouTube chrome. */
+/** Prefer local screen-record — never shows play/pause. */
 const LOCAL_SRC = "/video/stan-live.mp4";
 const LOCAL_POSTER = "/video/stan-live-poster.jpg";
-
-const YT_ID = "1FD_QiQxrE4";
-const YT_TITLE = "Stan Wawrinka";
-const YT_POSTER = `https://i.ytimg.com/vi/${YT_ID}/maxresdefault.jpg`;
-
-function youtubeEmbedSrc(id: string) {
-  const params = new URLSearchParams({
-    autoplay: "1",
-    mute: "1",
-    controls: "0",
-    modestbranding: "1",
-    rel: "0",
-    iv_load_policy: "3",
-    fs: "0",
-    disablekb: "1",
-    playsinline: "1",
-    loop: "1",
-    playlist: id,
-    cc_load_policy: "0",
-    enablejsapi: "0",
-    // No related end-screen UI
-    showinfo: "0",
-  });
-  return `https://www.youtube-nocookie.com/embed/${id}?${params.toString()}`;
-}
+const STILL = stanMedia.hero;
 
 /**
- * Hero: name + one line of copy. Video never exposes play/pause —
- * local mp4 if present; otherwise oversized muted YT embed fully masked.
- * Screen-record → public/video/stan-live.mp4 for a clean player-free hero.
+ * Hero: name + one line. Local video if present; otherwise a sharp still.
+ * No YouTube embed (bot walls / play UI break the handoff under the hero).
  */
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -83,13 +60,13 @@ export function Hero() {
     const ctx = gsap.context(() => {
       gsap.set(words, { yPercent: 110, opacity: 0 });
       gsap.set(copy.querySelector(".hero-line"), { opacity: 0, y: 12 });
-      gsap.set(media, { scale: 1.14, yPercent: -3 });
+      gsap.set(media, { scale: 1.12, yPercent: -2 });
 
       const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
       intro
-        .to(media, { scale: 1.06, yPercent: 0, duration: 2.2, ease: "power2.out" }, 0)
-        .to(words, { yPercent: 0, opacity: 1, duration: 1.05, stagger: 0.1 }, 0.35)
-        .to(copy.querySelector(".hero-line"), { opacity: 1, y: 0, duration: 0.7 }, 0.9);
+        .to(media, { scale: 1.05, yPercent: 0, duration: 2, ease: "power2.out" }, 0)
+        .to(words, { yPercent: 0, opacity: 1, duration: 1, stagger: 0.1 }, 0.3)
+        .to(copy.querySelector(".hero-line"), { opacity: 1, y: 0, duration: 0.65 }, 0.85);
 
       if (reduce) {
         gsap.set(media, { scale: 1.04, yPercent: 0 });
@@ -104,15 +81,14 @@ export function Hero() {
           start: "top top",
           end: "bottom bottom",
           pin: pin,
-          scrub: 0.4,
+          scrub: 0.35,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
 
-      tl.to(media, { yPercent: 12, scale: 1.02, ease: "none", duration: 1 }, 0);
-      tl.to(copy, { yPercent: -36, opacity: 0, ease: "none", duration: 1 }, 0);
-      tl.to(media, { opacity: 0.35, ease: "none", duration: 0.35 }, 0.65);
+      tl.to(media, { yPercent: 10, scale: 1.02, ease: "none", duration: 1 }, 0);
+      tl.to(copy, { yPercent: -28, opacity: 0, ease: "none", duration: 1 }, 0);
     }, section);
 
     return () => ctx.revert();
@@ -122,81 +98,52 @@ export function Hero() {
     <section
       id="top"
       ref={sectionRef}
-      className="relative h-[160svh] bg-obsidian text-paper-white"
+      className="relative h-[150svh] bg-obsidian text-paper-white"
       aria-label="Stan Wawrinka"
     >
       <div ref={pinRef} className="relative h-[100svh] min-h-[640px] overflow-hidden">
-        <div ref={mediaRef} className="absolute inset-[-8%] will-change-transform">
-          <div
-            className="absolute inset-0 overflow-hidden bg-obsidian bg-cover bg-center"
-            style={{ backgroundImage: `url(${useLocal ? LOCAL_POSTER : YT_POSTER})` }}
-          >
-            {useLocal ? (
-              <video
-                ref={videoRef}
-                className="pointer-events-none absolute inset-0 h-full w-full object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="auto"
-                poster={LOCAL_POSTER}
-                controls={false}
-                disablePictureInPicture
-                controlsList="nodownload nofullscreen noremoteplayback"
-                aria-label={YT_TITLE}
-              >
-                <source src={LOCAL_SRC} type="video/mp4" />
-              </video>
-            ) : (
-              <iframe
-                title={YT_TITLE}
-                src={youtubeEmbedSrc(YT_ID)}
-                width={1920}
-                height={1080}
-                tabIndex={-1}
-                className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-0"
-                style={{
-                  width: "max(100%, 177.78vh)",
-                  height: "max(100%, 56.25vw)",
-                  minWidth: 1280,
-                  minHeight: 720,
-                }}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-                allowFullScreen={false}
-                loading="eager"
-                referrerPolicy="strict-origin-when-cross-origin"
-              />
-            )}
-          </div>
-
-          {/* Full click shield — nothing on the media is interactive */}
-          <div className="pointer-events-auto absolute inset-0 z-[1]" aria-hidden />
+        <div ref={mediaRef} className="absolute inset-[-6%] will-change-transform">
+          {useLocal ? (
+            <video
+              ref={videoRef}
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              poster={LOCAL_POSTER}
+              controls={false}
+              disablePictureInPicture
+              controlsList="nodownload nofullscreen noremoteplayback"
+            >
+              <source src={LOCAL_SRC} type="video/mp4" />
+            </video>
+          ) : (
+            <Image
+              src={STILL.src}
+              alt={STILL.alt}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-[center_20%]"
+            />
+          )}
 
           <div
-            className="pointer-events-none absolute inset-0 z-[2]"
+            className="pointer-events-none absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, rgba(17,17,17,0.3) 0%, rgba(17,17,17,0.08) 42%, rgba(17,17,17,0.55) 100%)",
+                "linear-gradient(180deg, rgba(17,17,17,0.28) 0%, rgba(17,17,17,0.1) 45%, rgba(17,17,17,0.72) 100%)",
             }}
-          />
-          {/* Mask residual YT title / logo edges */}
-          <div
-            className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[14%] bg-gradient-to-b from-obsidian via-obsidian/70 to-transparent"
-            aria-hidden
-          />
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[18%] bg-gradient-to-t from-obsidian/80 to-transparent"
-            aria-hidden
           />
         </div>
 
-        {/* Subtle dark wash only behind bottom-left type */}
         <div
-          className="pointer-events-none absolute bottom-0 left-0 z-[3] h-[48%] w-full max-w-[920px]"
+          className="pointer-events-none absolute bottom-0 left-0 z-[3] h-[46%] w-full max-w-[900px]"
           style={{
             background:
-              "radial-gradient(ellipse 85% 75% at 18% 88%, rgba(17,17,17,0.72) 0%, rgba(17,17,17,0.35) 42%, rgba(17,17,17,0) 72%)",
+              "radial-gradient(ellipse 85% 75% at 16% 90%, rgba(17,17,17,0.7) 0%, rgba(17,17,17,0.3) 45%, rgba(17,17,17,0) 72%)",
           }}
           aria-hidden
         />

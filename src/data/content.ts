@@ -146,14 +146,6 @@ export const beyondStories = [
     cta: "Visit Let It Beat",
   },
   {
-    title: "Everest on his forearm",
-    eyebrow: "Mentality",
-    summary:
-      "The tattooed Samuel Beckett line — “Ever tried. Ever failed. No matter. Try again. Fail again. Fail better.” — became shorthand for his competitive identity.",
-    href: "https://www.atptour.com/en/players/stan-wawrinka/w367/bio",
-    cta: "ATP biography",
-  },
-  {
     title: "Parents' organic farm",
     eyebrow: "Roots",
     summary:

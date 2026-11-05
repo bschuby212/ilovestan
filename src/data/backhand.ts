@@ -61,28 +61,22 @@ export const backhandPlayers = [
 
 export const backhandCallouts = [
   {
-    label: "Average backhand speed",
+    label: "Average backhand",
     value: 75,
     format: "plain" as const,
     unit: "mph",
-    detail:
-      "AO Hawk-Eye average pace at impact (2014–2016) — top among tracked one-handers.",
   },
   {
     label: "Average spin",
     value: 2500,
     format: "comma" as const,
     unit: "RPM",
-    detail:
-      "Nearly the same RPM as his forehand — rare balance for a one-hander.",
   },
   {
-    label: "Total winners · RG ’15 final",
+    label: "Total winners",
     value: 60,
     format: "plain" as const,
-    unit: "winners",
-    detail:
-      "Against Djokovic in Paris — the backhand drove the demolition.",
+    unit: "RG ’15",
   },
 ] as const;
 
