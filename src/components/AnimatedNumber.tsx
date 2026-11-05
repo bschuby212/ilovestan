@@ -72,8 +72,8 @@ export function AnimatedNumber({
   }, [value, format, start, duration, delay]);
 
   return (
-    <span ref={ref} className={className}>
-      0
+    <span ref={ref} className={className} suppressHydrationWarning>
+      {formatValue(value, format)}
     </span>
   );
 }

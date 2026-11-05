@@ -149,15 +149,14 @@ export function BackhandLab() {
                   {stat.label}
                 </p>
                 <p className="mt-3 flex flex-col gap-1">
-                  <span className="display-type text-[40px] leading-none tabular-nums">
-                    <AnimatedNumber
-                      value={stat.value}
-                      format={stat.format}
-                      delay={i * 0.08}
-                      duration={1.2}
-                      start="top 80%"
-                    />
-                  </span>
+                  <AnimatedNumber
+                    value={stat.value}
+                    format={stat.format}
+                    delay={i * 0.08}
+                    duration={1.2}
+                    start="top 80%"
+                    className="display-type block text-[40px] leading-none tabular-nums"
+                  />
                   <span
                     className="text-[12px] tracking-[0.06em] uppercase"
                     style={{ color: "rgba(255,255,255,0.6)" }}
