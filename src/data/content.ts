@@ -24,6 +24,7 @@ export const grandSlams = [
     score: "6–3, 6–2, 3–6, 6–3",
     note: "Defeated the world No. 1 in the final for his first major.",
     stat: "First Slam",
+    image: "serve" as const,
   },
   {
     id: "rg-2015",
@@ -35,6 +36,7 @@ export const grandSlams = [
     score: "4–6, 6–4, 6–3, 6–4",
     note: "Claimed the Coupe des Mousquetaires on his favorite surface.",
     stat: "Clay crown",
+    image: "queens" as const,
   },
   {
     id: "uso-2016",
@@ -46,6 +48,7 @@ export const grandSlams = [
     score: "6–7, 6–4, 7–5, 6–3",
     note: "Third major — again beating the reigning world No. 1 in a Slam final.",
     stat: "Third major",
+    image: "usOpen" as const,
   },
 ] as const;
 

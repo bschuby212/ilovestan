@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { beyondStories, quote } from "@/data/content";
+import { stanMedia } from "@/data/media";
 import { getGsap } from "@/lib/gsap";
 
 export function BeyondCourt() {
@@ -62,21 +64,32 @@ export function BeyondCourt() {
           Heart, ink, and the long game
         </h2>
 
-        <blockquote ref={quoteRef} className="mt-16 max-w-4xl md:mt-24">
-          <p className="display-type text-[clamp(32px,5.5vw,64px)] leading-[1.05] text-paper-white">
-            {quote.text.split(". ").map((chunk, i, arr) => (
-              <span key={chunk} className="block overflow-hidden">
-                <span className="q-line inline-block">
-                  {chunk}
-                  {i < arr.length - 1 ? "." : ""}
+        <div className="mt-16 grid grid-cols-1 items-end gap-10 md:mt-24 md:grid-cols-12">
+          <blockquote ref={quoteRef} className="md:col-span-7">
+            <p className="display-type text-[clamp(32px,5.5vw,64px)] leading-[1.05] text-paper-white">
+              {quote.text.split(". ").map((chunk, i, arr) => (
+                <span key={chunk} className="block overflow-hidden">
+                  <span className="q-line inline-block">
+                    {chunk}
+                    {i < arr.length - 1 ? "." : ""}
+                  </span>
                 </span>
-              </span>
-            ))}
-          </p>
-          <footer className="mt-8 text-[14px] text-faint-gray">
-            {quote.attribution}
-          </footer>
-        </blockquote>
+              ))}
+            </p>
+            <footer className="mt-8 text-[14px] text-faint-gray">
+              {quote.attribution}
+            </footer>
+          </blockquote>
+          <div className="relative aspect-[3/4] w-full overflow-hidden md:col-span-5">
+            <Image
+              src={stanMedia.portrait.src}
+              alt={stanMedia.portrait.alt}
+              fill
+              sizes="(max-width: 768px) 100vw, 40vw"
+              className="object-cover object-top"
+            />
+          </div>
+        </div>
 
         <div className="stories mt-20 grid grid-cols-1 gap-0 border-t border-white/15 md:mt-28 md:grid-cols-2">
           {beyondStories.map((story, i) => (

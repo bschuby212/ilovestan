@@ -1,4 +1,5 @@
 import { navLinks, site } from "@/data/content";
+import { stanMedia } from "@/data/media";
 
 const columns = [
   {
@@ -21,12 +22,16 @@ const columns = [
     title: "About",
     links: [
       { label: "Unofficial tribute", href: "#tribute" },
-      { label: "Media placeholders", href: "#top" },
+      { label: "Photo credits", href: "#credits" },
     ],
   },
 ] as const;
 
 export function Footer() {
+  const uniqueCredits = Array.from(
+    new Map(Object.values(stanMedia).map((m) => [m.credit, m])).values(),
+  );
+
   return (
     <footer className="border-t border-concrete-gray bg-paper-white text-obsidian">
       <div className="mx-auto max-w-[1440px] px-6 py-16 md:px-10">
@@ -38,8 +43,8 @@ export function Footer() {
           <p className="text-[16px] text-steel">Switzerland</p>
         </div>
 
-        <div className="mt-14 grid grid-cols-2 gap-10 md:grid-cols-3">
-          {columns.map((col) => (
+        <div className="mt-14 grid grid-cols-2 gap-10 md:grid-cols-4">
+          {columns.slice(0, 3).map((col) => (
             <div key={col.title}>
               <h3 className="text-[16px] font-medium md:text-[20px]">{col.title}</h3>
               <ul className="mt-4 space-y-3">
@@ -59,6 +64,16 @@ export function Footer() {
               </ul>
             </div>
           ))}
+          <div id="credits">
+            <h3 className="text-[16px] font-medium md:text-[20px]">Photo credits</h3>
+            <ul className="mt-4 space-y-3">
+              {uniqueCredits.map((m) => (
+                <li key={m.src} className="text-[14px] leading-[1.5] text-steel">
+                  {m.credit}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <hr className="hairline mt-14" />

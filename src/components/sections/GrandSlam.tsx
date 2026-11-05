@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { grandSlams } from "@/data/content";
+import { stanMedia } from "@/data/media";
 import { getGsap } from "@/lib/gsap";
 
 const COURT_RGB = {
@@ -250,28 +252,42 @@ export function GrandSlam() {
           ref={panelsRef}
           className="absolute inset-x-0 bottom-0 z-20 px-6 pb-10 md:px-10 md:pb-14"
         >
-          {grandSlams.map((slam) => (
-            <article
-              key={slam.id}
-              className="slam-card absolute inset-x-6 bottom-10 max-w-xl md:inset-x-10 md:bottom-14"
-            >
-              <p className="text-[12px] font-medium tracking-[0.2em] text-paper-white/70 uppercase">
-                {slam.surface} · {slam.stat}
-              </p>
-              <p className="display-type mt-2 text-[clamp(40px,7vw,72px)] text-paper-white">
-                {slam.year}
-              </p>
-              <h3 className="mt-1 text-[20px] leading-[1.5] font-medium md:text-[24px]">
-                {slam.tournament}
-              </h3>
-              <p className="mt-3 max-w-md text-[16px] leading-[1.75] text-paper-white/85">
-                {slam.note}
-              </p>
-              <p className="mt-2 text-[14px] text-paper-white/65">
-                Final · {slam.opponent} · {slam.score}
-              </p>
-            </article>
-          ))}
+          {grandSlams.map((slam) => {
+            const photo = stanMedia[slam.image];
+            return (
+              <article
+                key={slam.id}
+                className="slam-card absolute inset-x-6 bottom-10 flex max-w-4xl flex-col gap-6 md:inset-x-10 md:bottom-14 md:flex-row md:items-end"
+              >
+                <div className="relative hidden h-48 w-36 shrink-0 overflow-hidden md:block md:h-56 md:w-44">
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    fill
+                    sizes="176px"
+                    className="object-cover"
+                  />
+                </div>
+                <div>
+                  <p className="text-[12px] font-medium tracking-[0.2em] text-paper-white/70 uppercase">
+                    {slam.surface} · {slam.stat}
+                  </p>
+                  <p className="display-type mt-2 text-[clamp(40px,7vw,72px)] text-paper-white">
+                    {slam.year}
+                  </p>
+                  <h3 className="mt-1 text-[20px] leading-[1.5] font-medium md:text-[24px]">
+                    {slam.tournament}
+                  </h3>
+                  <p className="mt-3 max-w-md text-[16px] leading-[1.75] text-paper-white/85">
+                    {slam.note}
+                  </p>
+                  <p className="mt-2 text-[14px] text-paper-white/65">
+                    Final · {slam.opponent} · {slam.score}
+                  </p>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
