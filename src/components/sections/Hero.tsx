@@ -1,14 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef } from "react";
-import { stanMedia } from "@/data/media";
 import { getGsap } from "@/lib/gsap";
 
+const HIGHLIGHTS_SRC = "/video/stan-highlights.mp4";
+const HIGHLIGHTS_POSTER = "/video/stan-highlights-poster.jpg";
+
 /**
- * Framer-style sticky parallax (prlx.learnframer.site):
- * full-bleed authentic Stan still + independent text scroll speed.
- * When licensed match film is available, place it at /video/stan-hero.mp4.
+ * Full-bleed career-highlights video background + Framer-style parallax.
+ * Reel is built from authentic Stan Wikimedia stills (Ken Burns montage)
+ * until licensed match film replaces /video/stan-highlights.mp4.
  */
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -22,20 +23,27 @@ export function Hero() {
     const video = videoRef.current;
     if (!video) return;
 
-    const src = "/video/stan-hero.mp4";
-    fetch(src, { method: "HEAD" })
-      .then((res) => {
-        if (!res.ok) return;
-        const source = document.createElement("source");
-        source.src = src;
-        source.type = "video/mp4";
-        video.appendChild(source);
-        video.load();
-        video.dataset.ready = "true";
-        video.muted = true;
-        void video.play().catch(() => undefined);
-      })
-      .catch(() => undefined);
+    const tryPlay = () => {
+      video.muted = true;
+      video.playsInline = true;
+      void video.play().catch(() => undefined);
+    };
+
+    tryPlay();
+    video.addEventListener("loadeddata", tryPlay);
+    video.addEventListener("canplay", tryPlay);
+
+    const onVisibility = () => {
+      if (document.hidden) video.pause();
+      else tryPlay();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      video.removeEventListener("loadeddata", tryPlay);
+      video.removeEventListener("canplay", tryPlay);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, []);
 
   useEffect(() => {
@@ -54,7 +62,7 @@ export function Hero() {
       gsap.set(words, { yPercent: 110, opacity: 0 });
       gsap.set(copy.querySelectorAll(".hero-fade"), { opacity: 0, y: 16 });
       gsap.set(scrollHint, { opacity: 0 });
-      gsap.set(media, { scale: 1.22, yPercent: -6 });
+      gsap.set(media, { scale: 1.24, yPercent: -6 });
 
       const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
       intro
@@ -67,7 +75,10 @@ export function Hero() {
         )
         .to(scrollHint, { opacity: 1, duration: 0.5 }, 1.35);
 
-      if (reduce) return;
+      if (reduce) {
+        gsap.set(media, { scale: 1.08, yPercent: 0 });
+        return;
+      }
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -81,9 +92,7 @@ export function Hero() {
         },
       });
 
-      // Background media — slow scroll speed
-      tl.to(media, { yPercent: 20, scale: 1.04, ease: "none", duration: 1 }, 0);
-      // Typography — Framer ~0.4 speed float
+      tl.to(media, { yPercent: 22, scale: 1.04, ease: "none", duration: 1 }, 0);
       tl.to(copy, { yPercent: -58, ease: "none", duration: 1 }, 0);
       tl.to(scrollHint, { opacity: 0, y: -20, ease: "none", duration: 0.2 }, 0);
       tl.to(copy, { opacity: 0.15, ease: "none", duration: 0.3 }, 0.7);
@@ -101,28 +110,24 @@ export function Hero() {
     >
       <div ref={pinRef} className="relative h-[100svh] min-h-[640px] overflow-hidden">
         <div ref={mediaRef} className="absolute inset-[-14%] will-change-transform">
-          <Image
-            src={stanMedia.hero.src}
-            alt={stanMedia.hero.alt}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-[center_22%]"
-          />
           <video
             ref={videoRef}
-            className="absolute inset-0 h-full w-full object-cover opacity-0 data-[ready=true]:opacity-100"
+            className="absolute inset-0 h-full w-full object-cover"
+            autoPlay
             muted
             loop
             playsInline
-            preload="none"
-            aria-label="Authorized Stan Wawrinka match footage"
-          />
+            preload="auto"
+            poster={HIGHLIGHTS_POSTER}
+            aria-label="Stan Wawrinka career highlights reel"
+          >
+            <source src={HIGHLIGHTS_SRC} type="video/mp4" />
+          </video>
           <div
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, rgba(17,17,17,0.5) 0%, rgba(17,17,17,0.18) 38%, rgba(17,17,17,0.78) 100%)",
+                "linear-gradient(180deg, rgba(17,17,17,0.52) 0%, rgba(17,17,17,0.18) 40%, rgba(17,17,17,0.82) 100%)",
             }}
           />
         </div>
@@ -132,7 +137,7 @@ export function Hero() {
           className="relative z-10 flex h-full flex-col justify-end px-6 pb-24 will-change-transform md:px-10 md:pb-28"
         >
           <p className="hero-fade mb-4 text-[12px] font-medium tracking-[0.22em] text-paper-white/70 uppercase">
-            1985 — 2026
+            Career highlights · 1985 — 2026
           </p>
           <h1 className="display-type max-w-[12ch] text-paper-white">
             <span className="block overflow-hidden">
@@ -150,9 +155,6 @@ export function Hero() {
               Enter the journey
             </a>
           </div>
-          <p className="hero-fade mt-6 max-w-md text-[12px] leading-[1.5] text-faint-gray">
-            {stanMedia.hero.credit}
-          </p>
         </div>
 
         <div
