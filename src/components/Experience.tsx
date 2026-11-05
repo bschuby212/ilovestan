@@ -5,6 +5,7 @@ import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { TitlesOverview } from "@/components/sections/TitlesOverview";
 import { GrandSlam } from "@/components/sections/GrandSlam";
+import { FailBetter } from "@/components/sections/FailBetter";
 import { BackhandLab } from "@/components/sections/BackhandLab";
 import { Achievements } from "@/components/sections/Achievements";
 import { BeyondCourt } from "@/components/sections/BeyondCourt";
@@ -20,6 +21,7 @@ export function Experience() {
         <Hero />
         <TitlesOverview />
         <GrandSlam />
+        <FailBetter />
         <BackhandLab />
         <Achievements />
         <BeyondCourt />

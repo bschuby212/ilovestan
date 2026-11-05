@@ -1,33 +1,26 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ColorTyper, type ColorTyperHandle } from "@/components/ColorTyper";
 import { titlesOverview } from "@/data/titlesOverview";
 import { getGsap } from "@/lib/gsap";
 
-const HOLD_MS = 750;
-
-function waitTween(tween: { eventCallback: (name: string, cb: () => void) => void; totalDuration: () => number }) {
-  return new Promise<void>((resolve) => {
-    if (!tween || tween.totalDuration() === 0) {
-      resolve();
-      return;
-    }
-    tween.eventCallback("onComplete", () => resolve());
-  });
-}
+const TYPE_MS = 42;
+const DELETE_MS = 28;
+const HOLD_MS = 900;
+const GAP_MS = 280;
 
 /**
- * Full-viewport Color Typer: one text line cycles his titles
- * in → hold → out (time-based animation, not scroll-scrubbed).
+ * Full-viewport typewriter: one line types each title in,
+ * holds, deletes, then the next — classic writer cascade.
  */
 export function TitlesOverview() {
   const sectionRef = useRef<HTMLElement>(null);
-  const typerRef = useRef<ColorTyperHandle>(null);
   const [index, setIndex] = useState(0);
+  const [display, setDisplay] = useState("");
   const [active, setActive] = useState(false);
+  const [typing, setTyping] = useState(false);
 
-  const title = titlesOverview.titles[index] ?? titlesOverview.titles[0];
+  const full = titlesOverview.titles[index] ?? titlesOverview.titles[0];
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -46,31 +39,52 @@ export function TitlesOverview() {
       onLeaveBack: () => setActive(false),
     });
 
-    if (reduce) setActive(true);
+    if (reduce) {
+      setActive(true);
+      setDisplay(full);
+    }
 
     return () => st.kill();
-  }, []);
+  }, [full]);
 
   useEffect(() => {
     if (!active) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setDisplay(full);
+      return;
+    }
 
     let cancelled = false;
+    setTyping(true);
+
+    const sleep = (ms: number) =>
+      new Promise<void>((resolve) => {
+        const t = window.setTimeout(resolve, ms);
+        if (cancelled) window.clearTimeout(t);
+      });
 
     const run = async () => {
-      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-      if (cancelled || !typerRef.current) return;
-
-      typerRef.current.reset();
-      await waitTween(typerRef.current.typeIn());
+      setDisplay("");
+      // type in
+      for (let i = 1; i <= full.length; i++) {
+        if (cancelled) return;
+        setDisplay(full.slice(0, i));
+        await sleep(TYPE_MS);
+      }
       if (cancelled) return;
-
-      await new Promise((r) => setTimeout(r, HOLD_MS));
-      if (cancelled || !typerRef.current) return;
-
-      await waitTween(typerRef.current.typeOut());
+      setTyping(false);
+      await sleep(HOLD_MS);
       if (cancelled) return;
-
+      setTyping(true);
+      // delete out
+      for (let i = full.length - 1; i >= 0; i--) {
+        if (cancelled) return;
+        setDisplay(full.slice(0, i));
+        await sleep(DELETE_MS);
+      }
+      if (cancelled) return;
+      await sleep(GAP_MS);
+      if (cancelled) return;
       setIndex((i) => (i + 1) % titlesOverview.titles.length);
     };
 
@@ -78,7 +92,7 @@ export function TitlesOverview() {
     return () => {
       cancelled = true;
     };
-  }, [active, index]);
+  }, [active, index, full]);
 
   return (
     <section
@@ -93,19 +107,16 @@ export function TitlesOverview() {
           {titlesOverview.eyebrow}
         </p>
 
-        <div className="relative flex min-h-[1.2em] items-center">
-          <ColorTyper
-            key={title}
-            ref={typerRef}
-            text={title}
-            split="word"
-            from="var(--color-faint-gray)"
-            to="var(--color-paper-white)"
-            colorTime={0.14}
-            stagger={0.04}
-            className="display-type text-[clamp(40px,7.5vw,76px)] leading-[1.0]"
+        <p className="display-type min-h-[1.15em] text-[clamp(40px,7.5vw,76px)] leading-[1.0]">
+          <span>{display}</span>
+          <span
+            className={`ml-[2px] inline-block w-[0.08em] bg-paper-white align-[-0.05em] ${
+              typing ? "animate-pulse" : "opacity-100"
+            }`}
+            style={{ height: "0.85em" }}
+            aria-hidden
           />
-        </div>
+        </p>
 
         <ul className="mt-14 flex gap-2" aria-hidden>
           {titlesOverview.titles.map((t, i) => (
