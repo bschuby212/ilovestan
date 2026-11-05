@@ -8,7 +8,6 @@ export const site = {
 /** Primary section anchors — dropdown label tracks the active one on scroll */
 export const navLinks = [
   { href: "#top", label: "Home", id: "top" },
-  { href: "#titles-overview", label: "Titles", id: "titles-overview" },
   { href: "#grand-slams", label: "Grand Slams", id: "grand-slams" },
   { href: "#fail-better", label: "Fail Better", id: "fail-better" },
   { href: "#backhand", label: "Backhand", id: "backhand" },

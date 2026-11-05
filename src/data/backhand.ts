@@ -7,8 +7,8 @@
 
 export const backhandSection = {
   eyebrow: "The weapon",
-  title: "One-handed backhand laboratory",
-  lede: "Pace, spin, and winners — told as type and motion, not charts. The drive that finished points.",
+  title: "One-handed backhand",
+  lede: "Pace, spin, winners — the drive that finished points.",
 } as const;
 
 export const backhandPlayers = [

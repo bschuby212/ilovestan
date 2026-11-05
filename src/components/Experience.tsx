@@ -4,7 +4,6 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { TitlesOverview } from "@/components/sections/TitlesOverview";
-import { GrandSlam } from "@/components/sections/GrandSlam";
 import { FailBetter } from "@/components/sections/FailBetter";
 import { BackhandLab } from "@/components/sections/BackhandLab";
 import { Testimonials } from "@/components/sections/Testimonials";
@@ -21,7 +20,6 @@ export function Experience() {
       <main>
         <Hero />
         <TitlesOverview />
-        <GrandSlam />
         <FailBetter />
         <BackhandLab />
         <Testimonials />

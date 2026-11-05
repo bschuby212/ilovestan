@@ -2,20 +2,14 @@
 
 ## Hero source (current)
 
-Hero uses a muted YouTube embed of Stan highlights:
-
-- Video: https://youtu.be/1FD_QiQxrE4
-- Embed: `youtube-nocookie.com` with controls off, modest branding, loop, muted autoplay
-- UI hiding: oversized iframe cropped inside the hero + edge gradients + `pointer-events-none`
-
-YouTube may still flash a title/logo on load — their player always reserves some chrome. If that keeps showing through, **screen-record the clip** and drop a local file instead (cleaner, no player UI):
+Hero prefers a **local screen-record** (no play/pause UI ever):
 
 ```text
 public/video/stan-live.mp4
 public/video/stan-live-poster.jpg   # optional still frame
 ```
 
-Then point `Hero.tsx` back at the local `<video>` (or ask the agent to swap).
+If that file is missing, it falls back to a muted YouTube embed of https://youtu.be/1FD_QiQxrE4 with controls off + full click shield + edge masks. YouTube can still flash chrome / bot walls — **screen-record and drop the mp4 above** for a clean hero.
 
 ## Optional local clip (preferred long-term)
 
