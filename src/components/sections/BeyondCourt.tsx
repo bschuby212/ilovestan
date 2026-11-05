@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { Heart } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { SectionHeading } from "@/components/SectionHeading";
 import { beyondStories, quote } from "@/data/content";
 import { stanMedia } from "@/data/media";
 import { getGsap } from "@/lib/gsap";
@@ -57,12 +59,12 @@ export function BeyondCourt() {
       aria-label="Beyond the court"
     >
       <div className="mx-auto max-w-[1440px] px-6 py-24 md:px-10 md:py-32">
-        <p className="text-[12px] font-medium tracking-[0.22em] text-faint-gray uppercase">
-          Beyond the court
-        </p>
-        <h2 className="mt-3 max-w-[16ch] text-[24px] leading-[1.2] font-medium md:text-[clamp(28px,3.5vw,40px)]">
-          Heart, ink, and the long game
-        </h2>
+        <SectionHeading
+          eyebrow="Beyond the court"
+          title="Heart, ink, and the long game"
+          icon={Heart}
+          tone="dark"
+        />
 
         <div className="mt-16 grid grid-cols-1 items-end gap-10 md:mt-24 md:grid-cols-12">
           <blockquote ref={quoteRef} className="md:col-span-7">

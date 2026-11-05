@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { Medal } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { stanMedia } from "@/data/media";
 import { titlesOverview } from "@/data/titlesOverview";
@@ -136,7 +137,8 @@ export function TitlesOverview() {
         </div>
 
         <div className="relative z-20 mx-auto w-full max-w-[1440px] px-6 md:px-10">
-          <p className="mb-10 text-[12px] font-medium tracking-[0.22em] text-faint-gray uppercase md:mb-14">
+          <p className="mb-10 flex items-center gap-2 text-[12px] font-medium tracking-[0.22em] text-faint-gray uppercase md:mb-14">
+            <Medal className="h-3.5 w-3.5" strokeWidth={1.6} aria-hidden />
             {titlesOverview.sectionEyebrow}
           </p>
 

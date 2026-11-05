@@ -1,165 +1,117 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { Trophy } from "lucide-react";
+import { useRef, useState } from "react";
+import { SectionHeading } from "@/components/SectionHeading";
 import { achievements } from "@/data/content";
-import { stanMedia } from "@/data/media";
-import { getGsap } from "@/lib/gsap";
+import { stanMedia, type StanMediaKey } from "@/data/media";
 
-const featuredVisuals = [
-  { ...achievements[0], image: stanMedia.serve, href: "#grand-slams" },
-  { ...achievements[1], image: stanMedia.queens, href: "#grand-slams" },
-  { ...achievements[2], image: stanMedia.usOpen, href: "#grand-slams" },
-  { ...achievements[3], image: stanMedia.wimbledon, href: "#timeline" },
-] as const;
+const rows: {
+  title: string;
+  year: string;
+  kind: string;
+  detail: string;
+  image: StanMediaKey;
+}[] = [
+  { ...achievements[0], image: "serve" },
+  { ...achievements[1], image: "queens" },
+  { ...achievements[2], image: "usOpen" },
+  { ...achievements[3], image: "wimbledon" },
+  { ...achievements[4], image: "heroDepth" },
+  {
+    title: "Career-high ranking",
+    year: "2014",
+    kind: "ATP",
+    detail: "World No. 3",
+    image: "portrait",
+  },
+  {
+    title: "ATP singles titles",
+    year: "16",
+    kind: "Tour",
+    detail: "Tour-level crowns",
+    image: "basel",
+  },
+  {
+    title: "Monte-Carlo Masters",
+    year: "2014",
+    kind: "Masters 1000",
+    detail: "d. Federer",
+    image: "queens",
+  },
+];
 
-const productStrip = [
-  { label: "AO 2014", image: stanMedia.serve },
-  { label: "RG 2015", image: stanMedia.queens },
-  { label: "USO 2016", image: stanMedia.usOpen },
-  { label: "Olympic gold", image: stanMedia.wimbledon },
-  { label: "Davis Cup", image: stanMedia.portrait },
-  { label: "No. 3", image: stanMedia.heroDepth },
-] as const;
-
+/**
+ * Project Brick–style list — titles as type; image floats in on hover.
+ * No card grid, no archive dump.
+ */
 export function Achievements() {
+  const [active, setActive] = useState<number | null>(null);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
   const rootRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    const { gsap } = getGsap();
+  const onMove = (e: React.MouseEvent) => {
     const root = rootRef.current;
     if (!root) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const ctx = gsap.context(() => {
-      gsap.from(root.querySelectorAll(".cat-tile"), {
-        opacity: 0,
-        y: 40,
-        duration: 0.9,
-        stagger: 0.08,
-        ease: "power3.out",
-        scrollTrigger: { trigger: root, start: "top 70%" },
-      });
-    }, root);
-
-    return () => ctx.revert();
-  }, []);
-
-  const archive = achievements.filter((a) => !a.featured);
+    const r = root.getBoundingClientRect();
+    setPos({ x: e.clientX - r.left, y: e.clientY - r.top });
+  };
 
   return (
     <section
       id="achievements"
       ref={rootRef}
-      className="bg-paper-white text-obsidian"
-      aria-label="Career titles and achievements"
+      onMouseMove={onMove}
+      className="relative overflow-hidden bg-paper-white text-obsidian"
+      aria-label="Titles"
     >
-      <div className="mx-auto max-w-[1440px] px-6 pt-24 pb-10 md:px-10 md:pt-32">
-        <p className="text-[12px] font-medium tracking-[0.22em] text-steel uppercase">
-          Exhibition
-        </p>
-        <h2 className="mt-3 max-w-[14ch] text-[24px] leading-[1.2] font-medium md:text-[clamp(28px,3.5vw,40px)]">
-          Titles hung like art
-        </h2>
-      </div>
+      <div className="mx-auto max-w-[1440px] px-6 py-20 md:px-10 md:py-28">
+        <SectionHeading eyebrow="Titles" title="What he won" icon={Trophy} />
 
-      {/* 2×2 category hero cards — Nike MD */}
-      <div className="grid grid-cols-1 md:grid-cols-2">
-        {featuredVisuals.map((item) => (
-          <article
-            key={`${item.title}-${item.year}`}
-            className="cat-tile media-mask group relative min-h-[50vh] overflow-hidden"
-          >
-            <Image
-              src={item.image.src}
-              alt={item.image.alt}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
-            />
-            <div
-              className="absolute inset-0 transition-opacity duration-500 group-hover:opacity-90"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(17,17,17,0.05) 0%, rgba(17,17,17,0.55) 100%)",
-              }}
-            />
-            <div className="absolute right-0 bottom-0 left-0 p-8 text-paper-white md:p-10">
-              <p className="text-[16px]">{item.kind}</p>
-              <h3 className="mt-1 text-[20px] leading-[1.5] font-medium transition-transform duration-500 ease-out group-hover:translate-x-1 md:text-[24px]">
-                {item.title}
-                <span className="text-paper-white/70"> · {item.year}</span>
-              </h3>
-              <p className="mt-2 max-w-sm text-[16px] text-paper-white/80">{item.detail}</p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                <a href={item.href} className="pill pill--light">
-                  <span className="link-swap">
-                    <span>View moment</span>
-                    <span aria-hidden>Enter</span>
+        <ul className="relative z-10 mt-14 border-t border-concrete-gray md:mt-20">
+          {rows.map((row, i) => (
+            <li key={`${row.title}-${row.year}`}>
+              <a
+                href="#grand-slams"
+                className="group flex items-baseline justify-between gap-6 border-b border-concrete-gray py-6 transition-opacity md:py-7"
+                onMouseEnter={() => setActive(i)}
+                onMouseLeave={() => setActive(null)}
+              >
+                <span className="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-4">
+                  <span className="text-[20px] font-medium md:text-[28px]">
+                    {row.title}
                   </span>
-                </a>
-                <a href="#timeline" className="pill pill--light">
-                  On the timeline
-                </a>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      {/* Horizontal product-card strip — Nike MD */}
-      <div className="border-t border-concrete-gray bg-paper-white">
-        <div className="mx-auto max-w-[1440px] px-6 py-12 md:px-10">
-          <p className="text-[12px] font-medium tracking-[0.18em] text-steel uppercase">
-            Collection
-          </p>
-        </div>
-        <div className="flex gap-0 overflow-x-auto pb-12">
-          {productStrip.map((card) => (
-            <article
-              key={card.label}
-              className="relative w-[33.333vw] min-w-[240px] shrink-0 bg-paper-white"
-            >
-              <div className="media-mask relative aspect-[4/5] w-full overflow-hidden bg-soft-mist">
-                <Image
-                  src={card.image.src}
-                  alt={card.image.alt}
-                  fill
-                  sizes="33vw"
-                  className="object-cover"
-                />
-                <span className="pill pill--dark pill--tag absolute bottom-4 left-4">
-                  {card.label}
+                  <span className="text-[14px] text-steel">{row.kind}</span>
                 </span>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-[1440px] px-6 pb-24 md:px-10 md:pb-32">
-        <h3 className="text-[16px] font-medium tracking-[0.16em] text-steel uppercase">
-          Archive
-        </h3>
-        <ul className="mt-6 divide-y divide-concrete-gray border-y border-concrete-gray">
-          {archive.map((item) => (
-            <li
-              key={`${item.title}-${item.year}`}
-              className="group flex flex-col gap-2 py-5 transition-colors md:flex-row md:items-baseline md:justify-between md:gap-8"
-            >
-              <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                <span className="text-[16px] font-medium transition-transform duration-500 ease-out group-hover:translate-x-1">
-                  {item.title}
+                <span className="shrink-0 text-[14px] tabular-nums text-steel md:text-[16px]">
+                  {row.detail}
+                  <span className="ml-4 font-medium text-obsidian">{row.year}</span>
                 </span>
-                <span className="text-[14px] text-steel">{item.kind}</span>
-              </div>
-              <div className="flex items-baseline gap-6 text-[16px]">
-                <span className="text-steel">{item.detail}</span>
-                <span className="font-medium tabular-nums">{item.year}</span>
-              </div>
+              </a>
             </li>
           ))}
         </ul>
+      </div>
+
+      {/* Hover preview — follows cursor */}
+      <div
+        className="pointer-events-none absolute top-0 left-0 z-20 hidden h-56 w-44 overflow-hidden bg-obsidian transition-opacity duration-200 md:block"
+        style={{
+          opacity: active === null ? 0 : 1,
+          transform: `translate(${pos.x + 24}px, ${pos.y - 120}px)`,
+        }}
+        aria-hidden
+      >
+        {active !== null ? (
+          <Image
+            src={stanMedia[rows[active]!.image].src}
+            alt=""
+            fill
+            sizes="176px"
+            className="object-cover"
+          />
+        ) : null}
       </div>
     </section>
   );

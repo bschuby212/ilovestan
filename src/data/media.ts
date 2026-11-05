@@ -41,6 +41,11 @@ export const stanMedia = {
     alt: "Stan Wawrinka portrait",
     credit: "Carine06 / Wikimedia Commons (CC BY-SA 2.0)",
   },
+  tattoo: {
+    src: "/media/stan/tattoo-gstaad-2023.jpg",
+    alt: "Stan Wawrinka’s Beckett tattoo, Gstaad 2023",
+    credit: "Gordons203 / Wikimedia Commons (CC BY-SA 4.0)",
+  },
 } as const;
 
 export type StanMediaKey = keyof typeof stanMedia;
