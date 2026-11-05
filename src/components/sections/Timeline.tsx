@@ -50,11 +50,11 @@ export function Timeline() {
           {timeline.map((item) => (
             <li
               key={`${item.year}-${item.title}`}
-              className="tl-row grid grid-cols-[4.5rem_1fr] gap-4 border-t border-concrete-gray py-5 md:grid-cols-[5.5rem_1fr_1.2fr] md:gap-8 md:py-6"
+              className="tl-row grid grid-cols-[4.75rem_minmax(0,1fr)] items-baseline gap-x-5 gap-y-1 border-t border-concrete-gray py-5 md:grid-cols-[5.5rem_minmax(12rem,0.9fr)_minmax(0,1.1fr)] md:gap-x-8 md:py-6"
             >
               <p className="text-[14px] font-medium tabular-nums text-steel">{item.year}</p>
               <h3 className="text-[16px] font-medium md:text-[17px]">{item.title}</h3>
-              <p className="col-span-2 text-[14px] leading-[1.55] text-steel md:col-span-1 md:text-[15px]">
+              <p className="col-start-2 text-[14px] leading-[1.55] text-steel md:col-start-3 md:text-[15px]">
                 {item.body}
               </p>
             </li>

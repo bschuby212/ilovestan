@@ -3,28 +3,11 @@
 import { Feather } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { getGsap } from "@/lib/gsap";
+import { stanMedia } from "@/data/media";
 
-const WIN_YT = "1FD_QiQxrE4";
-const WIN_POSTER = `https://i.ytimg.com/vi/${WIN_YT}/maxresdefault.jpg`;
-
-function winEmbedSrc() {
-  const params = new URLSearchParams({
-    autoplay: "1",
-    mute: "1",
-    controls: "0",
-    modestbranding: "1",
-    rel: "0",
-    iv_load_policy: "3",
-    fs: "0",
-    disablekb: "1",
-    playsinline: "1",
-    loop: "1",
-    playlist: WIN_YT,
-    cc_load_policy: "0",
-    enablejsapi: "1",
-  });
-  return `https://www.youtube-nocookie.com/embed/${WIN_YT}?${params.toString()}`;
-}
+const LOCAL_WIN = "/video/stan-highlights.mp4";
+const LOCAL_POSTER = "/video/stan-highlights-poster.jpg";
+const STILL = stanMedia.heroDepth;
 
 const stages = [
   {
@@ -54,27 +37,31 @@ const updates = [
 ] as const;
 
 /**
- * Sticky left winners video. Right panel crossfades through 2 stages,
+ * Sticky left winners video (local). Right panel stages through 2 beats,
  * then the loss — then a short updates strip below.
  */
 export function FailBetter() {
   const rootRef = useRef<HTMLElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const stageRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = true;
+    video.playsInline = true;
+    const tryPlay = () => void video.play().catch(() => undefined);
+    video.addEventListener("loadeddata", tryPlay);
+    tryPlay();
+    return () => video.removeEventListener("loadeddata", tryPlay);
+  }, []);
 
   useEffect(() => {
     const { gsap, ScrollTrigger } = getGsap();
     const root = rootRef.current;
     const pin = pinRef.current;
     if (!root || !pin) return;
-
-    const post = (command: "playVideo" | "pauseVideo") => {
-      iframeRef.current?.contentWindow?.postMessage(
-        JSON.stringify({ event: "command", func: command, args: [] }),
-        "*",
-      );
-    };
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const panels = stageRefs.current.filter(Boolean) as HTMLDivElement[];
@@ -84,10 +71,10 @@ export function FailBetter() {
         trigger: root,
         start: "top 70%",
         end: "bottom 30%",
-        onEnter: () => post("playVideo"),
-        onEnterBack: () => post("playVideo"),
-        onLeave: () => post("pauseVideo"),
-        onLeaveBack: () => post("pauseVideo"),
+        onEnter: () => void videoRef.current?.play().catch(() => undefined),
+        onEnterBack: () => void videoRef.current?.play().catch(() => undefined),
+        onLeave: () => videoRef.current?.pause(),
+        onLeaveBack: () => videoRef.current?.pause(),
       });
 
       if (reduce || panels.length === 0) {
@@ -121,7 +108,6 @@ export function FailBetter() {
           i - 0.15,
         );
       });
-      // Hold final stage briefly
       tl.to({}, { duration: 0.4 });
     }, root);
 
@@ -133,47 +119,33 @@ export function FailBetter() {
       <section
         id="fail-better"
         ref={rootRef}
-        className="relative bg-obsidian text-paper-white"
+        className="relative bg-[#111] text-[#fff]"
         aria-label="Fail better"
       >
         <div ref={pinRef} className="grid min-h-[100svh] grid-cols-1 lg:grid-cols-2">
-          {/* Left — sticky media, no internal scroll */}
-          <div className="relative min-h-[45vh] overflow-hidden bg-obsidian lg:min-h-[100svh]">
+          <div className="relative min-h-[45vh] overflow-hidden bg-[#111] lg:min-h-[100svh]">
             <div
               className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${WIN_POSTER})` }}
+              style={{ backgroundImage: `url(${STILL.src})` }}
             />
-            <iframe
-              ref={iframeRef}
-              title="Stan Wawrinka winning moments"
-              src={winEmbedSrc()}
-              width={1920}
-              height={1080}
-              tabIndex={-1}
-              className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-0"
-              style={{
-                width: "max(100%, 177.78vh)",
-                height: "max(100%, 56.25vw)",
-                minWidth: 1280,
-                minHeight: 720,
-              }}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-              allowFullScreen={false}
-            />
-            <div className="pointer-events-auto absolute inset-0 z-[1]" aria-hidden />
-            <div
-              className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[16%] bg-gradient-to-b from-obsidian/80 to-transparent"
-              aria-hidden
-            />
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[26%] bg-gradient-to-t from-obsidian via-obsidian/75 to-transparent"
-              aria-hidden
-            />
+            <video
+              ref={videoRef}
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={LOCAL_POSTER}
+              controls={false}
+              disablePictureInPicture
+            >
+              <source src={LOCAL_WIN} type="video/mp4" />
+            </video>
           </div>
 
-          {/* Right — staged copy */}
           <div className="relative flex min-h-[55vh] items-center px-6 py-16 md:px-10 lg:min-h-[100svh] lg:px-14">
-            <div className="relative w-full max-w-md">
+            <div className="relative w-full max-w-md" style={{ color: "#ffffff" }}>
               {stages.map((stage, i) => (
                 <div
                   key={stage.id}
@@ -183,14 +155,20 @@ export function FailBetter() {
                   className={i === 0 ? "relative" : "absolute inset-0"}
                   aria-hidden={i !== 0}
                 >
-                  <p className="flex items-center gap-2 text-[12px] font-medium tracking-[0.18em] text-faint-gray uppercase">
+                  <p
+                    className="flex items-center gap-2 text-[12px] font-medium tracking-[0.18em] uppercase"
+                    style={{ color: "#9e9ea0" }}
+                  >
                     <Feather className="h-3.5 w-3.5" strokeWidth={1.6} aria-hidden />
                     {stage.eyebrow}
                   </p>
                   <p className="mt-6 text-[24px] leading-[1.35] font-medium md:text-[28px]">
                     {stage.title}
                   </p>
-                  <p className="mt-5 text-[16px] leading-[1.7] text-paper-white/70">
+                  <p
+                    className="mt-5 text-[16px] leading-[1.7]"
+                    style={{ color: "rgba(255,255,255,0.7)" }}
+                  >
                     {stage.body}
                   </p>
                 </div>
@@ -200,15 +178,17 @@ export function FailBetter() {
         </div>
       </section>
 
-      {/* Mini updates after the loss */}
       <section
         id="fail-better-updates"
-        className="border-t border-white/10 bg-obsidian text-paper-white"
+        className="border-t border-white/10 bg-[#111] text-[#fff]"
         aria-label="What came after"
       >
         <div className="mx-auto flex max-w-[1440px] flex-col gap-8 px-6 py-14 md:flex-row md:items-end md:justify-between md:px-10 md:py-16">
           <div>
-            <p className="text-[12px] font-medium tracking-[0.18em] text-faint-gray uppercase">
+            <p
+              className="text-[12px] font-medium tracking-[0.18em] uppercase"
+              style={{ color: "#9e9ea0" }}
+            >
               After the loss
             </p>
             <p className="mt-3 max-w-[28ch] text-[22px] font-medium md:text-[26px]">
@@ -218,8 +198,15 @@ export function FailBetter() {
           <ul className="flex flex-col gap-4 sm:flex-row sm:gap-10">
             {updates.map((u) => (
               <li key={u.year} className="max-w-[22ch]">
-                <p className="text-[13px] tabular-nums text-faint-gray">{u.year}</p>
-                <p className="mt-1 text-[15px] leading-[1.5] text-paper-white/80">{u.text}</p>
+                <p className="text-[13px] tabular-nums" style={{ color: "#9e9ea0" }}>
+                  {u.year}
+                </p>
+                <p
+                  className="mt-1 text-[15px] leading-[1.5]"
+                  style={{ color: "rgba(255,255,255,0.8)" }}
+                >
+                  {u.text}
+                </p>
               </li>
             ))}
           </ul>

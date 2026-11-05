@@ -70,17 +70,19 @@
 }
 
 @theme inline {
-  --color-obsidian: var(--color-obsidian);
-  --color-paper-white: var(--color-paper-white);
-  --color-concrete-gray: var(--color-concrete-gray);
-  --color-soft-mist: var(--color-soft-mist);
-  --color-steel: var(--color-steel);
-  --color-faint-gray: var(--color-faint-gray);
-  --color-court-ao: var(--court-ao);
-  --color-court-rg: var(--court-rg);
-  --color-court-uso: var(--court-uso);
-  --font-ui: var(--font-ui);
-  --font-display: var(--font-display);
+  /* Literals — recursive var(--color-*) self-refs break Tailwind color utilities */
+  --color-obsidian: #111111;
+  --color-paper-white: #ffffff;
+  --color-concrete-gray: #e5e5e5;
+  --color-soft-mist: #f5f5f5;
+  --color-steel: #707072;
+  --color-faint-gray: #9e9ea0;
+  --color-court-ao: #0b3d91;
+  --color-court-rg: #c45c26;
+  --color-court-uso: #1a1a2e;
+  --font-ui: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: var(--font-futura-sub), "Futura PT", Futura, "Century Gothic",
+    sans-serif;
   --spacing-4: 4px;
   --spacing-8: 8px;
   --spacing-12: 12px;

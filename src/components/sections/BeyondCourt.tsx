@@ -69,7 +69,8 @@ export function BeyondCourt() {
                 href={first.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-paper-white px-5 py-2.5 text-[14px] font-medium text-obsidian transition-opacity hover:opacity-85"
+                className="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-[#ffffff] px-5 py-2.5 text-[14px] font-medium transition-opacity hover:opacity-85"
+                style={{ color: "#111111" }}
               >
                 {first.cta}
                 <ArrowUpRight className="size-4" aria-hidden />

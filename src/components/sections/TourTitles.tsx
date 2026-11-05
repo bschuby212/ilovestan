@@ -96,13 +96,18 @@ export function TourTitles() {
             href={atpTitlesUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="tt-card group relative flex aspect-[3/4] flex-col justify-between bg-obsidian p-5 text-paper-white transition-colors duration-300 hover:bg-[#1a1a1a] md:p-6"
+            className="tt-card group relative flex aspect-[3/4] flex-col justify-between bg-[#111] p-5 transition-colors duration-300 hover:bg-[#1a1a1a] md:p-6"
+            style={{ color: "#ffffff" }}
           >
-            <p className="display-type max-w-[10ch] text-[clamp(26px,2.4vw,34px)] leading-[1.05]">
+            <p
+              className="display-type max-w-[11ch] text-[clamp(26px,2.4vw,34px)] leading-[1.05]"
+              style={{ color: "#ffffff" }}
+            >
               See all titles on ATP Tour
             </p>
             <ArrowDownRight
-              className="ml-auto size-14 text-[#c8f542] transition-transform duration-300 group-hover:translate-x-1 group-hover:translate-y-1 md:size-16"
+              className="ml-auto size-14 transition-transform duration-300 group-hover:translate-x-1 group-hover:translate-y-1 md:size-16"
+              style={{ color: "#c8f542" }}
               strokeWidth={1.25}
               aria-hidden
             />
