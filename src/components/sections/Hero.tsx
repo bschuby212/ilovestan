@@ -214,7 +214,7 @@ export function Hero() {
             </span>
           </h1>
           <p className="hero-line mt-5 max-w-xl text-[20px] leading-[1.5] text-paper-white/85">
-            Three majors. One backhand. A career that refused to settle.
+            Three Grand Slams. One backhand.
           </p>
         </div>
       </div>
