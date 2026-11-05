@@ -7,7 +7,7 @@ import { TitlesOverview } from "@/components/sections/TitlesOverview";
 import { FailBetter } from "@/components/sections/FailBetter";
 import { BackhandLab } from "@/components/sections/BackhandLab";
 import { Testimonials } from "@/components/sections/Testimonials";
-import { Achievements } from "@/components/sections/Achievements";
+import { TitlesCanvas } from "@/components/sections/TitlesCanvas";
 import { BeyondCourt } from "@/components/sections/BeyondCourt";
 import { Timeline } from "@/components/sections/Timeline";
 import { Tribute } from "@/components/sections/Tribute";
@@ -23,7 +23,7 @@ export function Experience() {
         <FailBetter />
         <BackhandLab />
         <Testimonials />
-        <Achievements />
+        <TitlesCanvas />
         <BeyondCourt />
         <Timeline />
         <Tribute />
