@@ -134,7 +134,7 @@ export function Hero() {
         {/* Glass scroll-down — bottom right */}
         <div className="flex justify-end">
           <a
-            href="#fail-better"
+            href="#grand-slams"
             className="hero-anim group flex size-14 items-center justify-center rounded-full border border-white/40 bg-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.25)] backdrop-blur-md transition-transform duration-300 hover:scale-105 md:size-16"
             aria-label="Scroll down"
           >

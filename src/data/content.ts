@@ -7,9 +7,9 @@ export const site = {
 
 /** Footer explore links (nav chrome is logo + socials only) */
 export const navLinks = [
-  { href: "#fail-better", label: "Fail Better", id: "fail-better" },
   { href: "#grand-slams", label: "Majors", id: "grand-slams" },
   { href: "#backhand", label: "Backhand", id: "backhand" },
+  { href: "#fail-better", label: "Fail Better", id: "fail-better" },
   { href: "#achievements", label: "Tour titles", id: "achievements" },
   { href: "#testimonials", label: "Voices", id: "testimonials" },
   { href: "#beyond", label: "Beyond", id: "beyond" },
