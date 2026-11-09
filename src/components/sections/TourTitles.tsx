@@ -9,8 +9,8 @@ import { atpTitlesUrl, subThousandTitles } from "@/data/titles";
 import { getGsap } from "@/lib/gsap";
 
 /**
- * Biggest titles below Masters 1000 — portrait cards + ATP CTA card.
- * (Replaces the infinite 3D canvas.)
+ * Full career / trophy depth — reached from the Slams CTA.
+ * Portrait cards + ATP titles link.
  */
 export function TourTitles() {
   const rootRef = useRef<HTMLElement>(null);
@@ -19,8 +19,7 @@ export function TourTitles() {
     const { gsap } = getGsap();
     const root = rootRef.current;
     if (!root) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
       gsap.from(root.querySelectorAll(".tt-card"), {
@@ -41,20 +40,19 @@ export function TourTitles() {
       id="achievements"
       ref={rootRef}
       className="bg-paper-white text-obsidian"
-      aria-label="Tour titles"
+      aria-label="Career trophies"
     >
       <div className="mx-auto max-w-[1440px] px-6 py-20 md:px-10 md:py-28">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-12">
           <div className="max-w-[34ch]">
             <SectionHeading
-              eyebrow="Tour titles"
-              title="Biggest below the thousands"
+              eyebrow="Career"
+              title="More of the record"
               icon={Trophy}
             />
           </div>
           <p className="max-w-[36ch] text-[14px] leading-[1.7] text-steel md:pb-1 md:text-[15px]">
-            Standout ATP 500 and home-soil crowns — then open the full record on
-            the ATP site.
+            Olympics, Masters, and tour crowns — then the complete list on ATP.
           </p>
         </div>
 
@@ -96,7 +94,7 @@ export function TourTitles() {
             href={atpTitlesUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="tt-card group relative flex aspect-[3/4] flex-col justify-between bg-[#111] p-5 transition-colors duration-300 hover:bg-[#1a1a1a] md:p-6"
+            className="tt-card group relative flex aspect-[3/4] flex-col justify-between bg-[#111] p-5 md:p-6"
             style={{ color: "#ffffff" }}
           >
             <p

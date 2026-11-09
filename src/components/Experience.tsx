@@ -3,28 +3,31 @@
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/sections/Hero";
-import { TitlesOverview } from "@/components/sections/TitlesOverview";
 import { FailBetter } from "@/components/sections/FailBetter";
+import { MajorTitles } from "@/components/sections/MajorTitles";
 import { BackhandLab } from "@/components/sections/BackhandLab";
-import { Testimonials } from "@/components/sections/Testimonials";
 import { TourTitles } from "@/components/sections/TourTitles";
+import { Testimonials } from "@/components/sections/Testimonials";
 import { BeyondCourt } from "@/components/sections/BeyondCourt";
-import { Timeline } from "@/components/sections/Timeline";
 import { Footer } from "@/components/sections/Footer";
 
+/**
+ * Story order (no pinned photo carousel spam):
+ * Hero → Fail Better (origin) → 3 Slams + CTA → Backhand →
+ * Career trophies → Voices → Beyond
+ */
 export function Experience() {
   return (
     <SmoothScroll>
       <Nav />
       <main>
         <Hero />
-        <TitlesOverview />
         <FailBetter />
+        <MajorTitles />
         <BackhandLab />
-        <Testimonials />
         <TourTitles />
+        <Testimonials />
         <BeyondCourt />
-        <Timeline />
       </main>
       <Footer />
     </SmoothScroll>
