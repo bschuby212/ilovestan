@@ -46,13 +46,14 @@ export function TourTitles() {
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-12">
           <div className="max-w-[34ch]">
             <SectionHeading
-              eyebrow="Career"
-              title="More of the record"
+              eyebrow="Beyond the Slams"
+              title="The rest of the cabinet"
               icon={Trophy}
             />
           </div>
           <p className="max-w-[36ch] text-[14px] leading-[1.7] text-steel md:pb-1 md:text-[15px]">
-            Olympics, Masters, and tour crowns — then the complete list on ATP.
+            Olympic gold, Monte-Carlo, Rotterdam — then every title on the ATP
+            site.
           </p>
         </div>
 

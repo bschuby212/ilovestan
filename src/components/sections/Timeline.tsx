@@ -83,11 +83,11 @@ export function Timeline() {
         <div className="lg:col-span-5">
           <div className="lg:sticky lg:top-28 lg:pr-6">
             <h2 className="tl-intro display-type max-w-[14ch] text-[clamp(32px,4.2vw,52px)] leading-[1.05] text-white">
-              From first tour to the last point.
+              A career told in order.
             </h2>
             <p className="tl-intro mt-5 max-w-[36ch] text-[15px] leading-[1.7] text-white/60 md:text-[16px]">
-              The climb in order — ATP start, first title, the Slams, his Masters
-              1000, home farewell, retirement.
+              From the first ATP step to Basel — titles, the Masters, and the
+              last walk off home soil.
             </p>
             <a
               href="https://www.atptour.com/en/players/stan-wawrinka/w367/overview"

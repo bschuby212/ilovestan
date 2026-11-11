@@ -19,21 +19,21 @@ const stages = [
   {
     id: "vow",
     eyebrow: "The vow",
-    title: "Ink before the climb.",
-    body: "Beckett on skin — a private line he carried into every fifth set.",
+    title: "He wore the line before the titles.",
+    body: "Beckett inked after heartbreak — a reminder for every fifth set still to come.",
   },
   {
     id: "loss",
     eyebrow: "Melbourne 2013",
-    title: "Then he lost.",
-    body: "Australian Open semi — heartbreak that made the tattoo mean something.",
+    title: "Then the semi ended.",
+    body: "Australian Open — the loss that made the tattoo permanent.",
   },
 ] as const;
 
 const updates = [
-  { year: "2014", text: "Australian Open champion — first Slam." },
-  { year: "2015", text: "Roland-Garros — the clay crown." },
-  { year: "2016", text: "US Open — third major, again vs No. 1." },
+  { year: "2014", text: "First Slam — Nadal in the AO final." },
+  { year: "2015", text: "Roland-Garros — Djokovic on clay." },
+  { year: "2016", text: "US Open — third major, same No. 1." },
 ] as const;
 
 /**
@@ -192,7 +192,7 @@ export function FailBetter() {
               After the loss
             </p>
             <p className="mt-3 max-w-[28ch] text-[22px] font-medium md:text-[26px]">
-              Then the majors arrived.
+              Twelve months later, the first Slam.
             </p>
           </div>
           <ul className="flex flex-col gap-4 sm:flex-row sm:gap-10">

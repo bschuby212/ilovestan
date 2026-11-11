@@ -124,7 +124,7 @@ export function BackhandLab() {
             className="bh-fade display-type text-[clamp(32px,4.5vw,48px)] leading-[1.05]"
             style={{ color: "#ffffff" }}
           >
-            One-handed
+            The
             <br />
             backhand
           </h2>

@@ -1,7 +1,7 @@
 export const site = {
   title: "Stan Wawrinka — A Digital Tribute",
   description:
-    "An independent cinematic tribute to Stanislas Wawrinka: three Grand Slams, Olympic gold, and a career defined by heart.",
+    "An independent tribute to Stanislas Wawrinka — three Grand Slams, Olympic gold, and a backhand that finished the biggest points.",
   credit: "Independent, unofficial fan tribute. Not affiliated with Stan Wawrinka or the ATP.",
 };
 

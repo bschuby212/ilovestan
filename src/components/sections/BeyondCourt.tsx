@@ -45,8 +45,8 @@ export function BeyondCourt() {
     >
       <div className="mx-auto max-w-[1440px] px-6 py-20 md:px-10 md:py-28">
         <SectionHeading
-          eyebrow="Beyond the court"
-          title="Heart and the long game"
+          eyebrow="Off court"
+          title="What he carried besides the racket"
           icon={Heart}
         />
 

@@ -76,13 +76,14 @@ export function MajorTitles() {
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-12">
           <div className="max-w-[36ch]">
             <SectionHeading
-              eyebrow="Trophies"
-              title="Three Grand Slams"
+              eyebrow="The majors"
+              title="Three times he beat the best"
               icon={Medal}
             />
           </div>
           <p className="max-w-[34ch] text-[14px] leading-[1.7] text-steel md:pb-1 md:text-[15px]">
-            The majors in order — then open the full trophy and career record.
+            Melbourne, Paris, New York — each final against a world No. 1. Then
+            the rest of the cabinet.
           </p>
         </div>
 
@@ -129,7 +130,7 @@ export function MajorTitles() {
               className="display-type max-w-[11ch] text-[clamp(26px,2.4vw,34px)] leading-[1.05]"
               style={{ color: "#ffffff" }}
             >
-              See all trophies &amp; career
+              See the full cabinet
             </p>
             <ArrowDownRight
               className="ml-auto size-14 transition-transform duration-300 group-hover:translate-x-1 group-hover:translate-y-1 md:size-16"

@@ -15,8 +15,8 @@ export type Testimonial = {
 };
 
 export const testimonialsSection = {
-  eyebrow: "From the locker room",
-  title: "What they said",
+  eyebrow: "Peers",
+  title: "How they remember him",
 } as const;
 
 export const testimonials: Testimonial[] = [
