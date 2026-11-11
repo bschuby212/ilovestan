@@ -11,8 +11,8 @@ const HIGHLIGHTS = "/video/stan-highlights.mp4";
 const HIGHLIGHTS_POSTER = "/video/stan-highlights-poster.jpg";
 
 /**
- * Career timeline — sticky intro + larger image/text step cards
- * (tenpoints-style rows) with scroll reveals.
+ * Homeday-style career timeline — sticky left copy, numbered right milestones
+ * with media thumbs, scroll-linked reveals + intro animation.
  */
 export function Timeline() {
   const rootRef = useRef<HTMLElement>(null);
@@ -36,18 +36,35 @@ export function Timeline() {
       }
 
       root.querySelectorAll<HTMLElement>(".tl-step").forEach((step) => {
-        if (reduce) return;
+        if (reduce) {
+          gsap.set(step, { clearProps: "all" });
+          return;
+        }
         gsap.from(step, {
-          y: 48,
+          y: 40,
           opacity: 0,
-          duration: 0.8,
+          duration: 0.75,
           ease: "power3.out",
           scrollTrigger: {
             trigger: step,
-            start: "top 88%",
+            start: "top 85%",
             toggleActions: "play none none reverse",
           },
         });
+        const media = step.querySelector(".tl-media");
+        if (media) {
+          gsap.from(media, {
+            scale: 0.92,
+            opacity: 0,
+            duration: 0.85,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: step,
+              start: "top 82%",
+              toggleActions: "play none none reverse",
+            },
+          });
+        }
       });
     }, root);
 
@@ -61,15 +78,16 @@ export function Timeline() {
       className="bg-[#111] text-white"
       aria-label="Career timeline"
     >
-      <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-14 px-6 py-20 md:px-10 md:py-28 lg:grid-cols-12 lg:gap-16">
-        <div className="lg:col-span-4">
-          <div className="lg:sticky lg:top-28">
-            <h2 className="tl-intro display-type max-w-[12ch] text-[clamp(32px,4vw,48px)] leading-[1.05] text-white">
+      <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-16 px-6 py-20 md:px-10 md:py-28 lg:grid-cols-12 lg:gap-x-24 xl:gap-x-32">
+        {/* Left — sticky intro */}
+        <div className="lg:col-span-5">
+          <div className="lg:sticky lg:top-28 lg:pr-6">
+            <h2 className="tl-intro display-type max-w-[14ch] text-[clamp(32px,4.2vw,52px)] leading-[1.05] text-white">
               From first tour to the last point.
             </h2>
-            <p className="tl-intro mt-5 max-w-[34ch] text-[15px] leading-[1.7] text-white/55">
-              ATP start, first title, the Slams, his Masters 1000, home farewell,
-              retirement — each beat as a card.
+            <p className="tl-intro mt-5 max-w-[36ch] text-[15px] leading-[1.7] text-white/60 md:text-[16px]">
+              The climb in order — ATP start, first title, the Slams, his Masters
+              1000, home farewell, retirement.
             </p>
             <a
               href="https://www.atptour.com/en/players/stan-wawrinka/w367/overview"
@@ -83,7 +101,8 @@ export function Timeline() {
           </div>
         </div>
 
-        <ol className="flex flex-col gap-5 lg:col-span-8 md:gap-6">
+        {/* Right — numbered steps */}
+        <ol className="lg:col-span-7 lg:pl-4 xl:pl-8">
           {timeline.map((item, i) => {
             const photo = stanMedia[item.image];
             const n = String(i + 1).padStart(2, "0");
@@ -92,9 +111,28 @@ export function Timeline() {
             return (
               <li
                 key={`${item.year}-${item.title}`}
-                className="tl-step grid grid-cols-1 overflow-hidden rounded-[20px] bg-[#1a1a1a] md:grid-cols-[minmax(200px,0.42fr)_1fr] md:rounded-[24px]"
+                className="tl-step grid grid-cols-[auto_1fr_auto] items-center gap-4 border-t border-white/15 py-8 md:gap-6 md:py-10"
               >
-                <div className="relative min-h-[200px] overflow-hidden md:min-h-[240px]">
+                <p
+                  className="display-type w-[2.6ch] text-[clamp(28px,3vw,40px)] leading-none tabular-nums"
+                  style={{ color: "#c8f542" }}
+                >
+                  {n}
+                </p>
+
+                <div className="min-w-0 pr-2">
+                  <p className="text-[12px] font-medium tracking-[0.14em] text-white/45 uppercase">
+                    {item.year}
+                  </p>
+                  <h3 className="mt-1.5 text-[17px] leading-[1.3] font-medium text-white md:text-[20px]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 max-w-[40ch] text-[13px] leading-[1.55] text-white/55 md:text-[14px]">
+                    {item.body}
+                  </p>
+                </div>
+
+                <div className="tl-media relative h-[72px] w-[96px] shrink-0 overflow-hidden rounded-[14px] bg-white/10 md:h-[96px] md:w-[128px] md:rounded-[18px]">
                   {useVideo ? (
                     <video
                       className="absolute inset-0 h-full w-full object-cover"
@@ -114,26 +152,10 @@ export function Timeline() {
                       src={photo.src}
                       alt={photo.alt}
                       fill
-                      sizes="(max-width: 768px) 100vw, 40vw"
+                      sizes="128px"
                       className="object-cover"
                     />
                   )}
-                </div>
-
-                <div className="flex flex-col justify-center gap-4 p-6 md:p-8 lg:p-9">
-                  <p className="inline-flex w-fit items-center gap-2 rounded-full border border-[#c8f542]/45 px-3 py-1 text-[12px] font-medium tracking-[0.12em] text-[#c8f542] uppercase">
-                    <span className="tabular-nums">{n}</span>
-                    <span className="text-white/35">·</span>
-                    <span>{item.year}</span>
-                  </p>
-
-                  <h3 className="max-w-[18ch] text-[22px] leading-[1.2] font-medium text-white md:text-[26px]">
-                    {item.title}
-                  </h3>
-
-                  <p className="max-w-[42ch] text-[14px] leading-[1.65] text-white/55 md:text-[15px]">
-                    {item.body}
-                  </p>
                 </div>
               </li>
             );
