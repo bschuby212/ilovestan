@@ -9,10 +9,12 @@ import { FailBetter } from "@/components/sections/FailBetter";
 import { TourTitles } from "@/components/sections/TourTitles";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { BeyondCourt } from "@/components/sections/BeyondCourt";
+import { Timeline } from "@/components/sections/Timeline";
 import { Footer } from "@/components/sections/Footer";
 
 /**
- * Hero → Slam metrics → Backhand stats → Fail Better → career → voices → beyond
+ * Hero → Slams → Backhand → Fail Better → career titles →
+ * timeline → voices → beyond
  */
 export function Experience() {
   return (
@@ -24,6 +26,7 @@ export function Experience() {
         <BackhandLab />
         <FailBetter />
         <TourTitles />
+        <Timeline />
         <Testimonials />
         <BeyondCourt />
       </main>
